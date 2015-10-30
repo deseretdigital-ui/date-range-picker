@@ -15,6 +15,10 @@ This library uses window.matchMedia to control whether to show the one or two ca
 * defaultValue - A moment range object with the default range you want selected. Defaults to this.props.ranges[2] (i.e. last 7 days)
 * alwaysShowCalendar - Controls whether the calendar always shows or only for custom ranges. Defaults to true.
 
+# Styles
+
+A basic stylesheet is included for you in lib/styles.css or scss/index.scss. This is optional. If you wish customize it and use different styles, copy the scss to your own projects directory and change as needed.
+
 # Simple Example
 
 ```jsx

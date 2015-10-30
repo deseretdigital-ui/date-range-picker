@@ -4,7 +4,12 @@
 }
 
 .dateRangeInput__input {
-  @extend %baseInput;
+  color: $light-grey;
+  height: 24px;
+  padding: 8px;
+  margin-bottom: 10px;
+  font-size: 0.8em;
+  border: 1px solid $light-grey;
 
   display: inline-block;
   background-color: white;
@@ -16,6 +21,8 @@
   background-size: 15px 15px;
 
   @include respond-to(wide-screens) {
+    font-size: 1.3em;
+    font-weight: 300;
     height: 50px;
     padding: 10px 15px 10px 44px;
     background-position: 5px 10px;
@@ -24,7 +31,7 @@
 
   &:hover,
   &:focus {
-    border: 1px solid $utah-blue;
+    border: 1px solid $selectionColor;
     outline: none;
   }
 }
@@ -35,7 +42,7 @@
   left: 0px;
   z-index: 10;
   width: 305px;
-  border: 1px solid $utah-light-grey;
+  border: 1px solid $dropdownBorder;
   padding: 8px;
   background-color: white;
   border-radius: 6px;
@@ -52,7 +59,7 @@
     left: 9px;
     display: inline-block;
     border-right: 7px solid transparent;
-    border-bottom: 7px solid $utah-light-grey;
+    border-bottom: 7px solid $dropdownBorder;
     border-left: 7px solid transparent;
     border-bottom-color: rgba(0,0,0,.2);
     content: '';
@@ -103,8 +110,8 @@
   padding: 4px 10px;
 
   font-weight: 300;
-  background-color: $utah-ultra-light-grey;
-  color: $utah-grey;
+  background-color: $rangeButtonBackground;
+  color: $rangeButtonText;
   text-align: left;
 
   border: 0;
@@ -113,7 +120,7 @@
   &:hover,
   &:focus,
   &--active {
-    background-color: $utah-blue;
+    background-color: $rangeButtonBackgroundHover;
     color: white;
   }
 }

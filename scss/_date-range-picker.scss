@@ -1,5 +1,3 @@
-$selectionColor: $utah-blue;
-
 .DateRangePicker {
   display: inline-block;
   margin-bottom: 10px;
@@ -57,7 +55,7 @@ $selectionColor: $utah-blue;
   z-index: 1;
 
   &:hover {
-    background-color: $utah-ultra-light-grey;
+    background-color: $paginationArrowHover;
   }
 
   &--previous {
@@ -113,7 +111,7 @@ $selectionColor: $utah-blue;
 
 .DateRangePicker__MonthHeader {
   color: white;
-  background-color: $utah-light-grey;
+  background-color: $monthHeaderBackground;
   font-size: 14px;
   font-weight: 300;
   height: 35px;
@@ -160,12 +158,12 @@ $selectionColor: $utah-blue;
 
 .DateRangePicker__WeekdayHeading {
   background-color: #fff;
-  color: $lodging-color;
+  color: $weekdayHeadingText;
   font-weight: 500;
 
   abbr[title] {
     border-bottom-width: 0;
-    color: $lodging-color;
+    color: $weekdayHeadingText;
     cursor: pointer;
     font-size: inherit;
     text-decoration: none;
@@ -178,7 +176,7 @@ $selectionColor: $utah-blue;
   cursor: pointer;
   overflow: hidden;
   position: relative;
-  color: $utah-light-grey;
+  color: $dateText;
   background-color: #fff;
   font-weight: 300;
 
@@ -204,7 +202,7 @@ $selectionColor: $utah-blue;
   }
 
   &--is-highlighted {
-    color: $utah-grey;
+    color: $dateTextHighlighted;
   }
 }
 

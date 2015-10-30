@@ -1,0 +1,46 @@
+$blue: #147e9d;
+$grey: #343434;
+$light-grey: #a3a3a3;
+$ultra-light-grey: #ececec;
+
+$selectionColor: $blue;
+$dropdownBorder: $light-grey;
+
+$rangeButtonText: $grey;
+$rangeButtonBackground: $ultra-light-grey;
+$rangeButtonBackgroundHover: $blue;
+
+$paginationArrowHover: $ultra-light-grey;
+
+$monthHeaderBackground: $light-grey;
+$weekdayHeadingText: $grey;
+$dateText: $light-grey;
+$dateTextHighlighted: $grey;
+
+$image-path: "/images";
+
+$break-small: 660px;
+$break-medium: 980px;
+$break-large: 1300px;
+$break-extra-large: 1920px;
+
+@mixin respond-to($media) {
+    @if $media == handhelds {
+        @media only screen and (max-width: $break-small) { @content; }
+    }
+    @else if $media == medium-screens {
+        @media only screen and (min-width: $break-small + 1) and (max-width: $break-medium - 1) { @content; }
+    }
+    @else if $media == medium-screens-up {
+        @media only screen and (min-width: $break-small + 1) { @content; }
+    }
+    @else if $media == medium-wide-screens {
+        @media only screen and (min-width: $break-small) { @content; }
+    }
+    @else if $media == wide-screens {
+        @media only screen and (min-width: $break-medium) { @content; }
+    }
+    @else if $media == extra-wide-screens {
+        @media only screen and (min-width: $break-large) { @content; }
+    }
+}
