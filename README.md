@@ -1,6 +1,6 @@
 # Date Range Input
 
-This is a wrapper around https://github.com/onefinestay/react-daterange-picker which does not yet support v0.14. As such, this library should only be used with React 0.12 or React 0.13.
+This is a wrapper around https://github.com/onefinestay/react-daterange-picker v1.0.0, which uses React 0.14. As such, this library should only be used with React 0.14.
 
 This is the barebones version of the library. Currently, it's setup so you'll need to use ES6 imports to bring in the library and then compile it with WebPack.
 
@@ -22,7 +22,7 @@ A basic stylesheet is included for you in lib/styles.css or scss/index.scss. Thi
 # Simple Example
 
 ```jsx
-React.render(
+ReactDOM.render(
   <div>
     <DateRangeInput />
   </div>,
