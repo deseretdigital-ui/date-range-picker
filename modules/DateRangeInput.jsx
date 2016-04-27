@@ -14,7 +14,9 @@ let DateRangeInput = React.createClass({
       value: React.PropTypes.object
     })),
     defaultValue: React.PropTypes.object,
-    alwaysShowCalendar: React.PropTypes.bool
+    alwaysShowCalendar: React.PropTypes.bool,
+    maximumDate: React.PropTypes.instanceOf(Date),
+    minimumDate: React.PropTypes.instanceOf(Date)
   },
 
   getDefaultProps() {
@@ -242,13 +244,23 @@ let DateRangeInput = React.createClass({
   },
 
   renderPicker() {
+    let props = {
+      ref: 'dateRangePicker',
+      numberOfCalendars: this.state.numCalendars,
+      value: this.state.value,
+      onSelect: this.handleDatePickerSelect
+    };
+
+    if (this.props.minimumDate) {
+      props.minimumDate = this.props.minimumDate;
+    }
+
+    if (this.props.maximumDate) {
+      props.maximumDate = this.props.maximumDate;
+    }
+
     return (
-      <DateRangePicker
-        ref="dateRangePicker"
-        numberOfCalendars={this.state.numCalendars}
-        value={this.state.value}
-        onSelect={this.handleDatePickerSelect}
-      />
+      <DateRangePicker {...props} />
     );
   },
 
