@@ -116,7 +116,7 @@ let DateRangeInput = React.createClass({
   closeDropdown(e) {
     let wrapper = this.refs.dateRangeInputWrapper;
 
-    if (!wrapper.contains(e.target)) {
+    if (wrapper && !wrapper.contains(e.target)) {
       this.closeDropdownOnTimeout();
     }
   },
