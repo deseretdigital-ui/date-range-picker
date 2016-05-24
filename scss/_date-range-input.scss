@@ -79,7 +79,7 @@
   &--calendar-open {
     @include respond-to(wide-screens) {
       top: 52px;
-      width: 715px;
+      width: 570px;
     }
   }
 }
@@ -128,5 +128,19 @@
 .dateRangeInput__calendarWrapper {
   @include respond-to(wide-screens) {
     float: right;
+  }
+}
+
+.dateRangeInput__dropdown--has-ranges {
+  @include respond-to(wide-screens) {
+    width: 715px;
+
+    .DateRangeInput__dropdown--calendar-open {
+      width: 715px;
+    }
+
+    .dateRangeInput__calendarWrapper {
+      float: right;
+    }
   }
 }
