@@ -16,7 +16,9 @@ let DateRangeInput = React.createClass({
     defaultValue: React.PropTypes.object,
     alwaysShowCalendar: React.PropTypes.bool,
     maximumDate: React.PropTypes.instanceOf(Date),
-    minimumDate: React.PropTypes.instanceOf(Date)
+    minimumDate: React.PropTypes.instanceOf(Date),
+    alwaysShowDefaultRanges: React.PropTypes.bool,
+    ignoreMediaMatch: React.PropTypes.bool
   },
 
   getDefaultProps() {
@@ -69,6 +71,8 @@ let DateRangeInput = React.createClass({
       onDateSelected: () => {},
       defaultValue: defaultRanges[2].value,
       alwaysShowCalendar: true,
+      alwaysShowDefaultRanges: true,
+      ignoreMediaMatch: false,
       ranges: defaultRanges
     }
   },
@@ -83,13 +87,17 @@ let DateRangeInput = React.createClass({
   },
 
   componentDidMount () {
-    this.addMediaMatch();
+    if (!this.props.ignoreMediaMatch) {
+      this.addMediaMatch();
+    }
     window.addEventListener('mousedown', this.closeDropdown, false);
     window.addEventListener('touchstart', this.closeDropdown, false);
   },
 
   componentWillUnmount () {
-    this.mediaQuery.removeListener(this.observeMediaQuery);
+    if (!this.props.ignoreMediaMatch) {
+      this.mediaQuery.removeListener(this.observeMediaQuery);
+    }
     window.removeEventListener('mousedown', this.closeDropdown);
     window.addEventListener('touchstart', this.closeDropdown);
   },
@@ -281,7 +289,8 @@ let DateRangeInput = React.createClass({
 
     let dropdownClasses = {
       'dateRangeInput__dropdown': true,
-      'dateRangeInput__dropdown--calendar-open': calendarOpen
+      'dateRangeInput__dropdown--calendar-open': calendarOpen,
+      'dateRangeInput__dropdown--has-ranges': this.props.alwaysShowDefaultRanges
     };
 
     let customRangeClases = {
@@ -292,6 +301,17 @@ let DateRangeInput = React.createClass({
 
     return (
       <div className={classnames(dropdownClasses)}>
+        {this.renderDefaultRanges()}
+        {calendarWrapper}
+      </div>
+    );
+  },
+
+  renderDefaultRanges() {
+    let defaultRanges = '';
+
+    if (this.props.alwaysShowDefaultRanges) {
+      defaultRanges = (
         <ul className="dateRangeInput__defined-ranges">
           {this.renderRangeItems()}
           <li>
@@ -306,9 +326,10 @@ let DateRangeInput = React.createClass({
             </button>
           </li>
         </ul>
-        {calendarWrapper}
-      </div>
-    );
+      );
+    }
+
+    return defaultRanges;
   },
 
   renderRangeItems() {
