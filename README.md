@@ -17,6 +17,7 @@ This library uses window.matchMedia to control whether to show the one or two ca
 * minimumDate - The minimum date you want the user to be able to select.
 * maximumDate - The maximum date you want the user to be able to select.
 * showDefaultRanges - Boolean to indicate if the Predefined date ranges should be displayed. Defaults to true.
+* defaultDisplayValue - The value that is displayed when no dates have been selected yet. Defaults to "Select a date range"
 
 # Styles
 

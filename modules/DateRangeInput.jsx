@@ -17,7 +17,8 @@ let DateRangeInput = React.createClass({
     alwaysShowCalendar: React.PropTypes.bool,
     maximumDate: React.PropTypes.instanceOf(Date),
     minimumDate: React.PropTypes.instanceOf(Date),
-    showDefaultRanges: React.PropTypes.bool
+    showDefaultRanges: React.PropTypes.bool,
+    defaultDisplayValue: React.PropTypes.string
   },
 
   getDefaultProps() {
@@ -71,7 +72,8 @@ let DateRangeInput = React.createClass({
       defaultValue: defaultRanges[2].value,
       alwaysShowCalendar: true,
       ranges: defaultRanges,
-      showDefaultRanges: true
+      showDefaultRanges: true,
+      defaultDisplayValue: 'Select a date range'
     }
   },
 
@@ -126,7 +128,7 @@ let DateRangeInput = React.createClass({
   },
 
   getDisplayValue() {
-    let displayValue = 'Select a date range';
+    let displayValue = this.props.defaultDisplayValue;
     if (this.state.value) {
       let displayFormat = 'DD MMM YYYY'
       displayValue = this.state.value.start.format(displayFormat)
