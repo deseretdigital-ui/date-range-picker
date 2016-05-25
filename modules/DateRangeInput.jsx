@@ -17,7 +17,6 @@ let DateRangeInput = React.createClass({
     alwaysShowCalendar: React.PropTypes.bool,
     maximumDate: React.PropTypes.instanceOf(Date),
     minimumDate: React.PropTypes.instanceOf(Date),
-    showDefaultRanges: React.PropTypes.bool,
     defaultDisplayValue: React.PropTypes.string
   },
 
@@ -72,7 +71,6 @@ let DateRangeInput = React.createClass({
       defaultValue: defaultRanges[2].value,
       alwaysShowCalendar: true,
       ranges: defaultRanges,
-      showDefaultRanges: true,
       defaultDisplayValue: 'Select a date range'
     }
   },
@@ -286,28 +284,28 @@ let DateRangeInput = React.createClass({
     let dropdownClasses = {
       'dateRangeInput__dropdown': true,
       'dateRangeInput__dropdown--calendar-open': calendarOpen,
-      'dateRangeInput__dropdown--has-ranges': this.props.showDefaultRanges
+      'dateRangeInput__dropdown--has-ranges': this.props.ranges.length > 0
     };
 
     return (
       <div className={classnames(dropdownClasses)}>
-        {this.renderDefaultRanges()}
+        {this.renderRanges()}
         {calendarWrapper}
       </div>
     );
   },
 
-  renderDefaultRanges() {
+  renderRanges() {
     let customRangeClasses = {
       'dateRangeInput__rangeButton': true,
       'dateRangeInput__rangeButton--active': this.isValueCustomRange()
         || this.state.calendarOpen
     };
 
-    let defaultRanges = '';
+    let ranges = '';
 
-    if (this.props.showDefaultRanges) {
-      defaultRanges = (
+    if (this.props.ranges.length > 0) {
+      ranges = (
         <ul className="dateRangeInput__defined-ranges">
           {this.renderRangeItems()}
           <li>
@@ -325,7 +323,7 @@ let DateRangeInput = React.createClass({
       );
     }
 
-    return defaultRanges;
+    return ranges;
   },
 
   renderRangeItems() {
