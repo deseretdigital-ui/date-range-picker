@@ -17,6 +17,7 @@ This library uses window.matchMedia to control whether to show the one or two ca
 * minimumDate - The minimum date you want the user to be able to select.
 * maximumDate - The maximum date you want the user to be able to select.
 * defaultDisplayValue - The value that is displayed when no dates have been selected yet. Defaults to "Select a date range"
+* rows - The number of rows the calendars are shown in. If set to 2 then two calendars will be shown always in one column but in two rows. Defaults to 1.
 
 # Styles
 

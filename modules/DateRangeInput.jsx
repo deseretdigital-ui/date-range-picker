@@ -17,7 +17,8 @@ let DateRangeInput = React.createClass({
     alwaysShowCalendar: React.PropTypes.bool,
     maximumDate: React.PropTypes.instanceOf(Date),
     minimumDate: React.PropTypes.instanceOf(Date),
-    defaultDisplayValue: React.PropTypes.string
+    defaultDisplayValue: React.PropTypes.string,
+    rows: React.PropTypes.oneOf([1, 2])
   },
 
   getDefaultProps() {
@@ -71,7 +72,8 @@ let DateRangeInput = React.createClass({
       defaultValue: defaultRanges[2].value,
       alwaysShowCalendar: true,
       ranges: defaultRanges,
-      defaultDisplayValue: 'Select a date range'
+      defaultDisplayValue: 'Select a date range',
+      rows: 2
     }
   },
 
@@ -93,7 +95,7 @@ let DateRangeInput = React.createClass({
   componentWillUnmount () {
     this.mediaQuery.removeListener(this.observeMediaQuery);
     window.removeEventListener('mousedown', this.closeDropdown);
-    window.addEventListener('touchstart', this.closeDropdown);
+    window.removeEventListener('touchstart', this.closeDropdown);
   },
 
   addMediaMatch: function() {
@@ -105,6 +107,11 @@ let DateRangeInput = React.createClass({
 
   observeMediaQuery: function() {
     let numCalendars = (this.mediaQuery.matches) ? 1 : 2;
+
+    if (this.props.rows === 2) {
+      numCalendars = 2;
+    }
+
     this.setState({numCalendars});
   },
 
@@ -284,7 +291,8 @@ let DateRangeInput = React.createClass({
     let dropdownClasses = {
       'dateRangeInput__dropdown': true,
       'dateRangeInput__dropdown--calendar-open': calendarOpen,
-      'dateRangeInput__dropdown--has-ranges': this.props.ranges.length > 0
+      'dateRangeInput__dropdown--has-ranges': this.props.ranges.length > 0,
+      'dateRangeInput__dropdown--one-column': this.props.rows === 2
     };
 
     return (
