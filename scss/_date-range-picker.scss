@@ -109,6 +109,12 @@
   }
 }
 
+.DateRangePicker__Month:nth-child(2) {
+  @include respond-to(wide-screens) {
+    margin-left: 0;
+  }
+}
+
 .DateRangePicker__MonthHeader {
   color: white;
   background-color: $monthHeaderBackground;
@@ -330,4 +336,27 @@
   text-align: center;
   width: 100%;
   z-index: 1;
+}
+
+// Styles for when default ranges are rendered
+// needs the dateRangeInput__dropdown--has-ranges selector since the
+// DateRangePicker doesn't allow custom classes
+.dateRangeInput__dropdown--has-ranges {
+  .DateRangePicker {
+    margin-top: 20px;
+  }
+
+  .DateRangePicker__Month:nth-child(2) {
+    margin-left: 15px;
+
+    @include respond-to(wide-screens) {
+      margin-left: 18px;
+    }
+  }
+
+  .DateRangePicker__PaginationArrow--previous {
+    @include respond-to(wide-screens) {
+      left: 20px;
+    }
+  }
 }

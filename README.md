@@ -10,12 +10,14 @@ This library uses window.matchMedia to control whether to show the one or two ca
 
 # Props
 
-* onDateSelected - Function to call when date range is selected
-* ranges - Predefined ranges for the user to select. Defaults to [today, yesterday, last 7 days, last 30 days, this month, last month]
-* defaultValue - A moment range object with the default range you want selected. Defaults to this.props.ranges[2] (i.e. last 7 days)
+* onDateSelected - Function to call when date range is selected.
+* ranges - Predefined ranges for the user to select. Defaults to [today, yesterday, last 7 days, last 30 days, this month, last month].
+* defaultValue - A moment range object with the default range you want selected. Defaults to this.props.ranges[2] (i.e. last 7 days).
 * alwaysShowCalendar - Controls whether the calendar always shows or only for custom ranges. Defaults to true.
-* minimumDate - The minimum date you want the user to be able to select
-* maximumDate - The maximum date you want the user to be able to select
+* minimumDate - The minimum date you want the user to be able to select.
+* maximumDate - The maximum date you want the user to be able to select.
+* defaultDisplayValue - The value that is displayed when no dates have been selected yet. Defaults to "Select a date range"
+* rows - The number of rows the calendars are shown in. If set to 2 then two calendars will be shown always in one column but in two rows. Defaults to 1.
 
 # Styles
 

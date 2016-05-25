@@ -1,28 +1,28 @@
-$blue: #147e9d;
-$grey: #343434;
-$light-grey: #a3a3a3;
-$ultra-light-grey: #ececec;
+$blue: #147e9d !default;
+$grey: #343434 !default;
+$light-grey: #a3a3a3 !default;
+$ultra-light-grey: #ececec !default;
 
-$selectionColor: $blue;
-$dropdownBorder: $light-grey;
+$selectionColor: $blue !default;
+$dropdownBorder: $light-grey !default;
 
-$rangeButtonText: $grey;
-$rangeButtonBackground: $ultra-light-grey;
-$rangeButtonBackgroundHover: $blue;
+$rangeButtonText: $grey !default;
+$rangeButtonBackground: $ultra-light-grey !default;
+$rangeButtonBackgroundHover: $blue !default;
 
-$paginationArrowHover: $ultra-light-grey;
+$paginationArrowHover: $ultra-light-grey !default;
 
-$monthHeaderBackground: $light-grey;
-$weekdayHeadingText: $grey;
-$dateText: $light-grey;
-$dateTextHighlighted: $grey;
+$monthHeaderBackground: $light-grey !default;
+$weekdayHeadingText: $grey !default;
+$dateText: $light-grey !default;
+$dateTextHighlighted: $grey !default;
 
-$image-path: "/images";
+$image-path: "/images" !default;
 
-$break-small: 660px;
-$break-medium: 980px;
-$break-large: 1300px;
-$break-extra-large: 1920px;
+$break-small: 660px !default;
+$break-medium: 980px !default;
+$break-large: 1300px !default;
+$break-extra-large: 1920px !default;
 
 @mixin respond-to($media) {
     @if $media == handhelds {
