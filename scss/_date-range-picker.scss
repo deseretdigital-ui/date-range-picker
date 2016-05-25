@@ -1,7 +1,7 @@
 .DateRangePicker {
   display: inline-block;
   margin-bottom: 10px;
-  margin-top: 10px;
+  margin-top: 20px;
   padding: 0;
   position: relative;
   user-select: none;
@@ -60,6 +60,10 @@
 
   &--previous {
     left: 15px;
+
+    @include respond-to(wide-screens) {
+      left: 20px;
+    }
   }
 
   &--next {
@@ -353,40 +357,6 @@
   .DateRangePicker__PaginationArrow--previous {
     @include respond-to(wide-screens) {
       left: 20px;
-    }
-  }
-}
-
-// Styles for when in two rows rendered
-// needs the dateRangeInput__dropdown--one-column selector since the
-// DateRangePicker doesn't allow custom classes
-.dateRangeInput__dropdown--one-column {
-  .DateRangePicker {
-    margin-top: 0;
-  }
-
-  .DateRangePicker__Month {
-        margin-left: 0;
-  }
-  .DateRangePicker__Month:nth-child(2) {
-    margin-bottom: 15px;
-  }
-
-  .DateRangePicker__PaginationArrow--previous {
-      left: 0;
-  }
-}
-
-.dateRangeInput__dropdown--one-column {
-  @include respond-to(wide-screens) {
-    width: 275px;
-
-    .DateRangeInput__dropdown--calendar-open {
-      width: 275px;
-    }
-
-    .dateRangeInput__calendarWrapper {
-      float: right;
     }
   }
 }
