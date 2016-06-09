@@ -217,6 +217,12 @@ let DateRangeInput = React.createClass({
     });
   },
 
+  clearSelectedRange() {
+    this.setState({
+      value: null
+    });
+  },
+
   closeDropdownOnTimeout() {
     setTimeout(() => {
       this.setState({'dropdownOpen': false});
