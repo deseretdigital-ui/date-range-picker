@@ -293,6 +293,11 @@
 	      hideSelection: true
 	    });
 	  },
+	  clearSelectedRange: function clearSelectedRange() {
+	    this.setState({
+	      value: null
+	    });
+	  },
 	  closeDropdownOnTimeout: function closeDropdownOnTimeout() {
 	    var _this = this;
 
