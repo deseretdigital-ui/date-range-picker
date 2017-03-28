@@ -17,7 +17,8 @@ let DateRangeInput = React.createClass({
     alwaysShowCalendar: React.PropTypes.bool,
     maximumDate: React.PropTypes.instanceOf(Date),
     minimumDate: React.PropTypes.instanceOf(Date),
-    defaultDisplayValue: React.PropTypes.string
+    defaultDisplayValue: React.PropTypes.string,
+    selectSingleDay: React.PropTypes.bool
   },
 
   getDefaultProps() {
@@ -71,7 +72,8 @@ let DateRangeInput = React.createClass({
       defaultValue: defaultRanges[2].value,
       alwaysShowCalendar: true,
       ranges: defaultRanges,
-      defaultDisplayValue: 'Select a date range'
+      defaultDisplayValue: 'Select a date range',
+      selectSingleDay: true
     }
   },
 
@@ -257,7 +259,8 @@ let DateRangeInput = React.createClass({
       ref: 'dateRangePicker',
       numberOfCalendars: this.state.numCalendars,
       value: this.state.value,
-      onSelect: this.handleDatePickerSelect
+      onSelect: this.handleDatePickerSelect,
+      singleDateRange: this.props.selectSingleDay
     };
 
     if (this.props.minimumDate) {
@@ -344,7 +347,6 @@ let DateRangeInput = React.createClass({
       if (this.state.calendarOpen) {
         classes['dateRangeInput__rangeButton--active'] = false;
       }
-
       return (
         <li key={`range_${range.label}`}>
           <button

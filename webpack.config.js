@@ -10,17 +10,17 @@ module.exports = {
     filename: 'example/example.js'
   },
   module: {
-    loaders: [
+    rules: [
       {
         test: /\.jsx$/,
-        loader: 'babel',
-        query: {
+        loader: 'babel-loader',
+        options: {
           presets: ['react', 'es2015']
         }
       },
       {
         test: /\.scss$/,
-        loaders: [
+        use: [
           'style-loader',
           'css-loader',
           'sass-loader'
@@ -33,6 +33,9 @@ module.exports = {
     ]
   },
   resolve: {
-    extensions: ['', '.js', '.jsx']
+    extensions: ['.js', '.jsx'],
+    modules: [
+      'node_modules'
+    ]
   }
 };
