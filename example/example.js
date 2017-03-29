@@ -30816,7 +30816,7 @@ var DateRangeInput = _react2.default.createClass({
       alwaysShowCalendar: true,
       ranges: defaultRanges,
       defaultDisplayValue: 'Select a date range',
-      selectSingleDay: true
+      selectSingleDay: false
     };
   },
   getInitialState: function getInitialState() {
@@ -31075,7 +31075,6 @@ var DateRangeInput = _react2.default.createClass({
       if (_this3.state.calendarOpen) {
         classes['dateRangeInput__rangeButton--active'] = false;
       }
-
       return _react2.default.createElement(
         'li',
         { key: 'range_' + range.label },
