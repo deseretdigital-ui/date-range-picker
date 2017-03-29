@@ -73,7 +73,7 @@ let DateRangeInput = React.createClass({
       alwaysShowCalendar: true,
       ranges: defaultRanges,
       defaultDisplayValue: 'Select a date range',
-      selectSingleDay: true
+      selectSingleDay: false
     }
   },
 
