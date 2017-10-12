@@ -38375,6 +38375,8 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 var _react = __webpack_require__(8);
@@ -38393,13 +38395,11 @@ var _moment2 = _interopRequireDefault(_moment);
 
 __webpack_require__(468);
 
-var _classnames2 = __webpack_require__(18);
+var _classnames = __webpack_require__(18);
 
-var _classnames3 = _interopRequireDefault(_classnames2);
+var _classnames2 = _interopRequireDefault(_classnames);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -38438,11 +38438,12 @@ var DateRangeInput = function (_Component) {
     _initialiseProps.call(_this);
 
     _this.mediaQuery = null;
+    _this.selectedValue = props.defaultValue;
     _this.state = {
       dropdownOpen: false,
       calendarOpen: false,
       numCalendars: 2,
-      value: _this.props.defaultValue
+      value: props.defaultValue
     };
     return _this;
   }
@@ -38461,6 +38462,78 @@ var DateRangeInput = function (_Component) {
       window.removeEventListener('mousedown', this.closeDropdown);
       window.removeEventListener('touchstart', this.closeDropdown);
     }
+
+    // handleDatePickerSelect = (range) => {
+    //   this.setState({
+    //     value: range
+    //   });
+
+    //   this.props.onDateSelected(range);
+    //   this.closeDropdownOnTimeout();
+    // };
+
+    // renderPicker = () => {
+    //   let fromElementId = 'startDate';
+    //   let toElementId = 'endDate';
+    //   if (!this.props.showDefaultDates) {
+    //     fromElementId = 'headerStartDate';
+    //     toElementId = 'headerEndDate';
+    //   }
+
+    //   /*
+    //   Old Props
+    //   numberOfCalendars: this.state.numCalendars,
+    //     value: this.state.value,
+    //     onSelect: this.handleDatePickerSelect,
+    //     singleDateRange: this.props.selectSingleDay,
+    //    */
+    //   let props = {
+    //     ref: 'dateRangePicker',
+    //     onDatesChange: this.props.handleDateChange,
+    //     onFocusChange: this.props.handleFocusChange,
+    //     numberOfMonths: this.state.numCalendars,
+    //     withPortal: false,
+    //     startDatePlaceholderText: 'From',
+    //     endDatePlaceholderText: 'To',
+    //     orientation: 'horizontal',
+    //     showClearDates: false,
+    //     startDateId: fromElementId,
+    //     endDateId: toElementId,
+    //     disabled: false,
+    //     focusedInput: this.props.focusedInput,
+    //     startDate: this.props.checkinDate,
+    //     endDate: this.props.checkoutDate,
+    //     hideKeyboardShortcutsPanel: true,
+    //     daySize: this.props.daySize,
+    //   };
+
+    //   let hasError = false;
+    //   if (this.props.errors.checkin_date || this.props.errors.checkout_date) {
+    //     hasError = true;
+    //   }
+
+    //   let wrapperClasses = classnames({
+    //     [this.props.wrapperClass]: true,
+    //     [this.props.wrapperClass + '--dateError']: hasError,
+    //     /*[this.props.wrapperClass + '--editable']: !isMobile(),*/
+    //     [this.props.wrapperClass + '--daySize-' + this.props.daySize]: true
+    //   });
+
+    //   if (this.props.minimumDate) {
+    //     props.minimumDate = this.props.minimumDate;
+    //   }
+
+    //   if (this.props.maximumDate) {
+    //     props.maximumDate = this.props.maximumDate;
+    //   }
+
+    //   return (
+    //     <div className={wrapperClasses}>
+    //       <DateRangePicker {...props} />
+    //     </div>
+    //   );
+    // };
+
   }, {
     key: 'render',
     value: function render() {
@@ -38525,7 +38598,7 @@ DateRangeInput.defaultProps = {
   handleDateChange: function handleDateChange() {},
   handleFocusChange: function handleFocusChange() {},
   focusedInput: null,
-  daySize: 39
+  daySize: 36
 };
 
 var _initialiseProps = function _initialiseProps() {
@@ -38563,14 +38636,18 @@ var _initialiseProps = function _initialiseProps() {
 
   this.getDisplayValue = function () {
     var displayValue = _this2.props.defaultDisplayValue;
+
     if (_this2.state.value) {
       var displayFormat = 'DD MMM YYYY';
       displayValue = _this2.state.value.start.format(displayFormat) + ' - ' + _this2.state.value.end.format(displayFormat);
     }
+
     return displayValue;
   };
 
   this.handlePredefinedRangeSelect = function (range) {
+    _this2.selectedValue = range;
+
     _this2.setState({
       value: range,
       dropdownOpen: false,
@@ -38581,7 +38658,12 @@ var _initialiseProps = function _initialiseProps() {
     _this2.closeDropdownOnTimeout();
   };
 
-  this.handleDatePickerSelect = function (range) {
+  this.handleDateChange = function (date) {
+    console.log(date);
+    var range = _moment2.default.range(date.startDate, date.endDate);
+
+    _this2.selectedValue = range;
+
     _this2.setState({
       value: range
     });
@@ -38597,13 +38679,17 @@ var _initialiseProps = function _initialiseProps() {
 
     // @Note: We're directly changing state of the dateRangePicker
     // This has the potential to break as they update their library
-    _this2.refs.dateRangePicker.setState({
+    /*this.refs.dateRangePicker.setState({
       selectedStartDate: null,
       highlightedRange: range,
       highlightedDate: null,
       hideSelection: true,
       year: range.start.year(),
       month: range.start.month()
+    });*/
+
+    _this2.setState({
+      value: range
     });
   };
 
@@ -38612,17 +38698,20 @@ var _initialiseProps = function _initialiseProps() {
       return;
     }
 
-    var now = (0, _moment2.default)();
-
-    // @Note: We're directly changing state of the dateRangePicker
+    /*let now = moment();
+     // @Note: We're directly changing state of the dateRangePicker
     // This has the potential to break as they update their library
-    _this2.refs.dateRangePicker.setState({
+    this.refs.dateRangePicker.setState({
       selectedStartDate: null,
       highlightedRange: null,
       highlightedDate: null,
       hideSelection: true,
       year: now.year(),
       month: now.month()
+    });*/
+
+    _this2.setState({
+      value: _this2.selectedValue
     });
   };
 
@@ -38633,9 +38722,14 @@ var _initialiseProps = function _initialiseProps() {
 
     // @Note: We're directly changing state of the dateRangePicker
     // This has the potential to break as they update their library
-    _this2.refs.dateRangePicker.setState({
-      hideSelection: false
-    });
+    // this.refs.dateRangePicker.setState({
+    //   hideSelection: false
+    // });
+
+    // TODO: Handle custom range
+    // this.setState({
+    //   value: null
+    // });
   };
 
   this.handleHideCustomRange = function () {
@@ -38645,9 +38739,13 @@ var _initialiseProps = function _initialiseProps() {
 
     // @Note: We're directly changing state of the dateRangePicker
     // This has the potential to break as they update their library
-    _this2.refs.dateRangePicker.setState({
-      hideSelection: true
-    });
+    // this.refs.dateRangePicker.setState({
+    //   hideSelection: true
+    // });
+
+    // this.setState({
+    //   value: this.selectedValue
+    // });
   };
 
   this.clearSelectedRange = function () {
@@ -38685,36 +38783,13 @@ var _initialiseProps = function _initialiseProps() {
     return isCustom;
   };
 
-  this.renderPicker = function () {
-    var _classnames;
-
-    var fromElementId = 'startDate';
-    var toElementId = 'endDate';
-    if (!_this2.props.showDefaultDates) {
-      fromElementId = 'headerStartDate';
-      toElementId = 'headerEndDate';
-    }
-
-    /*
-    Old Props
-    numberOfCalendars: this.state.numCalendars,
-      value: this.state.value,
-      onSelect: this.handleDatePickerSelect,
-      singleDateRange: this.props.selectSingleDay,
-     */
+  this.renderCalendar = function () {
     var props = {
-      ref: 'dateRangePicker',
-      onDatesChange: _this2.props.handleDateChange,
+      onDatesChange: _this2.handleDateChange,
       onFocusChange: _this2.props.handleFocusChange,
       numberOfMonths: _this2.state.numCalendars,
       withPortal: false,
-      startDatePlaceholderText: 'From',
-      endDatePlaceholderText: 'To',
       orientation: 'horizontal',
-      showClearDates: false,
-      startDateId: fromElementId,
-      endDateId: toElementId,
-      disabled: false,
       focusedInput: _this2.props.focusedInput,
       startDate: _this2.props.checkinDate,
       endDate: _this2.props.checkoutDate,
@@ -38722,26 +38797,10 @@ var _initialiseProps = function _initialiseProps() {
       daySize: _this2.props.daySize
     };
 
-    var hasError = false;
-    if (_this2.props.errors.checkin_date || _this2.props.errors.checkout_date) {
-      hasError = true;
-    }
-
-    var wrapperClasses = (0, _classnames3.default)((_classnames = {}, _defineProperty(_classnames, _this2.props.wrapperClass, true), _defineProperty(_classnames, _this2.props.wrapperClass + '--dateError', hasError), _defineProperty(_classnames, _this2.props.wrapperClass + '--daySize-' + _this2.props.daySize, true), _classnames));
-
-    if (_this2.props.minimumDate) {
-      props.minimumDate = _this2.props.minimumDate;
-    }
-
-    if (_this2.props.maximumDate) {
-      props.maximumDate = _this2.props.maximumDate;
-    }
-
-    return _react2.default.createElement(
-      'div',
-      { className: wrapperClasses },
-      _react2.default.createElement(_reactDates.DateRangePicker, props)
-    );
+    return _react2.default.createElement(_reactDates.DayPickerRangeController, _extends({}, props, {
+      startDate: _this2.state.value.start,
+      endDate: _this2.state.value.end
+    }));
   };
 
   this.renderDropdown = function () {
@@ -38755,7 +38814,7 @@ var _initialiseProps = function _initialiseProps() {
       calendarWrapper = _react2.default.createElement(
         'div',
         { className: 'dateRangeInput__calendarWrapper' },
-        _this2.renderPicker()
+        _this2.renderCalendar()
       );
     }
 
@@ -38767,7 +38826,7 @@ var _initialiseProps = function _initialiseProps() {
 
     return _react2.default.createElement(
       'div',
-      { className: (0, _classnames3.default)(dropdownClasses) },
+      { className: (0, _classnames2.default)(dropdownClasses) },
       _this2.renderRanges(),
       calendarWrapper
     );
@@ -38795,7 +38854,7 @@ var _initialiseProps = function _initialiseProps() {
               type: 'button',
               onMouseEnter: _this2.handleShowCustomRange,
               onMouseLeave: _this2.handleHideCustomRange,
-              className: (0, _classnames3.default)(customRangeClasses),
+              className: (0, _classnames2.default)(customRangeClasses),
               onClick: _this2.showCalendar
             },
             'Custom Range'
@@ -38826,7 +38885,7 @@ var _initialiseProps = function _initialiseProps() {
             type: 'button',
             onMouseEnter: _this2.handleHighlightRange.bind(null, range.value),
             onMouseLeave: _this2.handleUnhighlightRange,
-            className: (0, _classnames3.default)(classes),
+            className: (0, _classnames2.default)(classes),
             onClick: _this2.handlePredefinedRangeSelect.bind(null, range.value)
           },
           range.label

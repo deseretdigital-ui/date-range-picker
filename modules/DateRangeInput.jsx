@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
-import {DateRangePicker} from 'react-dates';
+import {DayPickerRangeController} from 'react-dates';
 import moment from 'moment';
 import {} from 'moment-range';
 import classnames from 'classnames';
@@ -55,11 +55,12 @@ class DateRangeInput extends Component {
     super(props);
 
     this.mediaQuery = null;
+    this.selectedValue = props.defaultValue;
     this.state = {
       dropdownOpen: false,
       calendarOpen: false,
       numCalendars: 2,
-      value: this.props.defaultValue
+      value: props.defaultValue
     };
   }
 
@@ -91,7 +92,7 @@ class DateRangeInput extends Component {
     handleFocusChange: PropTypes.func,
     focusedInput: PropTypes.string,
     daySize: PropTypes.number
-  }
+  };
 
   static defaultProps = {
     onDateSelected: () => {},
@@ -112,8 +113,8 @@ class DateRangeInput extends Component {
     handleDateChange: () => { },
     handleFocusChange: () => { },
     focusedInput: null,
-    daySize: 39
-  }
+    daySize: 36
+  };
 
   componentDidMount() {
     this.addMediaMatch();
@@ -132,18 +133,18 @@ class DateRangeInput extends Component {
     this.mediaQuery.addListener(this.observeMediaQuery);
 
     this.observeMediaQuery();
-  }
+  };
 
   observeMediaQuery = () => {
     let numCalendars = (this.mediaQuery.matches) ? 1 : 2;
 
     this.setState({numCalendars});
-  }
+  };
 
   toggleDropdown = () => {
     let dropdownOpen = !this.state.dropdownOpen;
     this.setState({dropdownOpen});
-  }
+  };
 
   closeDropdown = (e) => {
     let wrapper = this.refs.dateRangeInputWrapper;
@@ -151,24 +152,28 @@ class DateRangeInput extends Component {
     if (wrapper && !wrapper.contains(e.target)) {
       this.closeDropdownOnTimeout();
     }
-  }
+  };
 
   showCalendar = () => {
     this.setState({calendarOpen: true});
-  }
+  };
 
   getDisplayValue = () => {
     let displayValue = this.props.defaultDisplayValue;
+
     if (this.state.value) {
       let displayFormat = 'DD MMM YYYY'
       displayValue = this.state.value.start.format(displayFormat)
         + ' - '
         + this.state.value.end.format(displayFormat);
     }
+
     return displayValue;
-  }
+  };
 
   handlePredefinedRangeSelect = (range) => {
+    this.selectedValue = range;
+
     this.setState({
       value: range,
       dropdownOpen: false,
@@ -177,16 +182,30 @@ class DateRangeInput extends Component {
 
     this.props.onDateSelected(range);
     this.closeDropdownOnTimeout();
-  }
+  };
 
-  handleDatePickerSelect = (range) => {
+  // handleDatePickerSelect = (range) => {
+  //   this.setState({
+  //     value: range
+  //   });
+
+  //   this.props.onDateSelected(range);
+  //   this.closeDropdownOnTimeout();
+  // };
+
+  handleDateChange = (date) => {
+    console.log(date);
+    let range = moment.range(date.startDate, date.endDate);
+
+    this.selectedValue = range;
+
     this.setState({
       value: range
     });
 
     this.props.onDateSelected(range);
     this.closeDropdownOnTimeout();
-  }
+  };
 
   handleHighlightRange = (range) => {
     if (!this.isCalendarOpen()) {
@@ -195,22 +214,26 @@ class DateRangeInput extends Component {
 
     // @Note: We're directly changing state of the dateRangePicker
     // This has the potential to break as they update their library
-    this.refs.dateRangePicker.setState({
+    /*this.refs.dateRangePicker.setState({
       selectedStartDate: null,
       highlightedRange: range,
       highlightedDate: null,
       hideSelection: true,
       year: range.start.year(),
       month: range.start.month()
+    });*/
+
+    this.setState({
+      value: range
     });
-  }
+  };
 
   handleUnhighlightRange = () => {
     if (!this.isCalendarOpen()) {
       return;
     }
 
-    let now = moment();
+    /*let now = moment();
 
     // @Note: We're directly changing state of the dateRangePicker
     // This has the potential to break as they update their library
@@ -221,8 +244,12 @@ class DateRangeInput extends Component {
       hideSelection: true,
       year: now.year(),
       month: now.month()
+    });*/
+
+    this.setState({
+      value: this.selectedValue
     });
-  }
+  };
 
   handleShowCustomRange = () => {
     if (!this.isCalendarOpen()) {
@@ -231,10 +258,15 @@ class DateRangeInput extends Component {
 
     // @Note: We're directly changing state of the dateRangePicker
     // This has the potential to break as they update their library
-    this.refs.dateRangePicker.setState({
-      hideSelection: false
-    });
-  }
+    // this.refs.dateRangePicker.setState({
+    //   hideSelection: false
+    // });
+
+    // TODO: Handle custom range
+    // this.setState({
+    //   value: null
+    // });
+  };
 
   handleHideCustomRange = () => {
     if (!this.isCalendarOpen()) {
@@ -243,26 +275,30 @@ class DateRangeInput extends Component {
 
     // @Note: We're directly changing state of the dateRangePicker
     // This has the potential to break as they update their library
-    this.refs.dateRangePicker.setState({
-      hideSelection: true
-    });
-  }
+    // this.refs.dateRangePicker.setState({
+    //   hideSelection: true
+    // });
+
+    // this.setState({
+    //   value: this.selectedValue
+    // });
+  };
 
   clearSelectedRange = () => {
     this.setState({
       value: null
     });
-  }
+  };
 
   closeDropdownOnTimeout = () => {
     setTimeout(() => {
       this.setState({'dropdownOpen': false});
     }, 0);
-  }
+  };
 
   isCalendarOpen = () => {
     return this.props.alwaysShowCalendar || this.state.calendarOpen;
-  }
+  };
 
   isValueCustomRange = () => {
     if (this.state.value === null) {
@@ -281,36 +317,77 @@ class DateRangeInput extends Component {
     });
 
     return isCustom;
-  }
+  };
 
-  renderPicker = () => {
-    let fromElementId = 'startDate';
-    let toElementId = 'endDate';
-    if (!this.props.showDefaultDates) {
-      fromElementId = 'headerStartDate';
-      toElementId = 'headerEndDate';
-    }
+  // renderPicker = () => {
+  //   let fromElementId = 'startDate';
+  //   let toElementId = 'endDate';
+  //   if (!this.props.showDefaultDates) {
+  //     fromElementId = 'headerStartDate';
+  //     toElementId = 'headerEndDate';
+  //   }
 
-    /*
-    Old Props
-    numberOfCalendars: this.state.numCalendars,
-      value: this.state.value,
-      onSelect: this.handleDatePickerSelect,
-      singleDateRange: this.props.selectSingleDay,
-     */
+  //   /*
+  //   Old Props
+  //   numberOfCalendars: this.state.numCalendars,
+  //     value: this.state.value,
+  //     onSelect: this.handleDatePickerSelect,
+  //     singleDateRange: this.props.selectSingleDay,
+  //    */
+  //   let props = {
+  //     ref: 'dateRangePicker',
+  //     onDatesChange: this.props.handleDateChange,
+  //     onFocusChange: this.props.handleFocusChange,
+  //     numberOfMonths: this.state.numCalendars,
+  //     withPortal: false,
+  //     startDatePlaceholderText: 'From',
+  //     endDatePlaceholderText: 'To',
+  //     orientation: 'horizontal',
+  //     showClearDates: false,
+  //     startDateId: fromElementId,
+  //     endDateId: toElementId,
+  //     disabled: false,
+  //     focusedInput: this.props.focusedInput,
+  //     startDate: this.props.checkinDate,
+  //     endDate: this.props.checkoutDate,
+  //     hideKeyboardShortcutsPanel: true,
+  //     daySize: this.props.daySize,
+  //   };
+
+  //   let hasError = false;
+  //   if (this.props.errors.checkin_date || this.props.errors.checkout_date) {
+  //     hasError = true;
+  //   }
+
+  //   let wrapperClasses = classnames({
+  //     [this.props.wrapperClass]: true,
+  //     [this.props.wrapperClass + '--dateError']: hasError,
+  //     /*[this.props.wrapperClass + '--editable']: !isMobile(),*/
+  //     [this.props.wrapperClass + '--daySize-' + this.props.daySize]: true
+  //   });
+
+  //   if (this.props.minimumDate) {
+  //     props.minimumDate = this.props.minimumDate;
+  //   }
+
+  //   if (this.props.maximumDate) {
+  //     props.maximumDate = this.props.maximumDate;
+  //   }
+
+  //   return (
+  //     <div className={wrapperClasses}>
+  //       <DateRangePicker {...props} />
+  //     </div>
+  //   );
+  // };
+
+  renderCalendar = () => {
     let props = {
-      ref: 'dateRangePicker',
-      onDatesChange: this.props.handleDateChange,
+      onDatesChange: this.handleDateChange,
       onFocusChange: this.props.handleFocusChange,
       numberOfMonths: this.state.numCalendars,
       withPortal: false,
-      startDatePlaceholderText: 'From',
-      endDatePlaceholderText: 'To',
       orientation: 'horizontal',
-      showClearDates: false,
-      startDateId: fromElementId,
-      endDateId: toElementId,
-      disabled: false,
       focusedInput: this.props.focusedInput,
       startDate: this.props.checkinDate,
       endDate: this.props.checkoutDate,
@@ -318,32 +395,14 @@ class DateRangeInput extends Component {
       daySize: this.props.daySize,
     };
 
-    let hasError = false;
-    if (this.props.errors.checkin_date || this.props.errors.checkout_date) {
-      hasError = true;
-    }
-
-    let wrapperClasses = classnames({
-      [this.props.wrapperClass]: true,
-      [this.props.wrapperClass + '--dateError']: hasError,
-      /*[this.props.wrapperClass + '--editable']: !isMobile(),*/
-      [this.props.wrapperClass + '--daySize-' + this.props.daySize]: true
-    });
-
-    if (this.props.minimumDate) {
-      props.minimumDate = this.props.minimumDate;
-    }
-
-    if (this.props.maximumDate) {
-      props.maximumDate = this.props.maximumDate;
-    }
-
     return (
-      <div className={wrapperClasses}>
-        <DateRangePicker {...props} />
-      </div>
+      <DayPickerRangeController
+          {...props}
+          startDate={this.state.value.start}
+          endDate={this.state.value.end}
+      />
     );
-  }
+  };
 
   renderDropdown = () => {
     if (!this.state.dropdownOpen) {
@@ -355,7 +414,7 @@ class DateRangeInput extends Component {
     if (calendarOpen) {
       calendarWrapper = (
         <div className="dateRangeInput__calendarWrapper">
-          {this.renderPicker()}
+          {this.renderCalendar()}
         </div>
       );
     }
@@ -372,7 +431,7 @@ class DateRangeInput extends Component {
         {calendarWrapper}
       </div>
     );
-  }
+  };
 
   renderRanges = () => {
     let customRangeClasses = {
@@ -403,7 +462,7 @@ class DateRangeInput extends Component {
     }
 
     return ranges;
-  }
+  };
 
   renderRangeItems = () => {
     return this.props.ranges.map((range) => {
@@ -430,7 +489,7 @@ class DateRangeInput extends Component {
         </li>
       );
     });
-  }
+  };
 
   render() {
     return (
