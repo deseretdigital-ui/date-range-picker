@@ -60,7 +60,10 @@ class DateRangeInput extends Component {
       dropdownOpen: false,
       calendarOpen: false,
       numCalendars: 2,
-      value: props.defaultValue
+      value: props.defaultValue,
+      startDate: props.defaultValue.start,
+      endDate: props.defaultValue.end,
+      focusedInput: null
     };
   }
 
@@ -79,11 +82,11 @@ class DateRangeInput extends Component {
 
     /* new props types for react-dates */
     wrapperClass: PropTypes.string,
-    checkinDate: PropTypes.oneOfType([
+    startDate: PropTypes.oneOfType([
       PropTypes.object,
       PropTypes.bool
     ]),
-    checkoutDate: PropTypes.oneOfType([
+    endDate: PropTypes.oneOfType([
       PropTypes.object,
       PropTypes.bool
     ]),
@@ -104,11 +107,11 @@ class DateRangeInput extends Component {
 
     /* new props for react-dates */
     wrapperClass: 'DateInputWrapper',
-    checkinDate: null,
-    checkoutDate: null,
+    startDate: null,
+    endDate: null,
     errors: {
-      checkin_date: false,
-      checkout_date: false
+      start_date: false,
+      end_date: false
     },
     handleDateChange: () => { },
     handleFocusChange: () => { },
@@ -144,6 +147,12 @@ class DateRangeInput extends Component {
   toggleDropdown = () => {
     let dropdownOpen = !this.state.dropdownOpen;
     this.setState({dropdownOpen});
+
+    if (dropdownOpen) {
+      if (this.props.ranges.length === 0) {
+        this.clearSelectedRange();
+      }
+    }
   };
 
   closeDropdown = (e) => {
@@ -158,14 +167,24 @@ class DateRangeInput extends Component {
     this.setState({calendarOpen: true});
   };
 
+  hasValidDate= () => {
+    let isValid = false;
+
+    if (this.state.startDate && this.state.endDate) {
+      isValid = true;
+    }
+
+    return isValid;
+  }
+
   getDisplayValue = () => {
     let displayValue = this.props.defaultDisplayValue;
 
-    if (this.state.value) {
+    if (this.hasValidDate()) {
       let displayFormat = 'DD MMM YYYY'
-      displayValue = this.state.value.start.format(displayFormat)
+      displayValue = this.state.startDate.format(displayFormat)
         + ' - '
-        + this.state.value.end.format(displayFormat);
+        + this.state.endDate.format(displayFormat);
     }
 
     return displayValue;
@@ -176,7 +195,8 @@ class DateRangeInput extends Component {
 
     this.setState({
       value: range,
-      dropdownOpen: false,
+      startDate: range.start,
+      endDate: range.end,
       calendarOpen: false
     });
 
@@ -184,27 +204,36 @@ class DateRangeInput extends Component {
     this.closeDropdownOnTimeout();
   };
 
-  // handleDatePickerSelect = (range) => {
-  //   this.setState({
-  //     value: range
-  //   });
-
-  //   this.props.onDateSelected(range);
-  //   this.closeDropdownOnTimeout();
-  // };
-
   handleDateChange = (date) => {
-    console.log(date);
-    let range = moment.range(date.startDate, date.endDate);
+    let range;
 
-    this.selectedValue = range;
+    if (date.startDate && date.endDate) {
+      range = moment.range(date.startDate, date.endDate);
+      this.selectedValue = range;
+      this.setState({
+        value: range,
+        startDate: date.startDate,
+        endDate: date.endDate,
+        calendarOpen: false
+      });
 
+      this.props.onDateSelected(range);
+      this.closeDropdownOnTimeout();
+    } else if (date.startDate) {
+      this.setState({
+        startDate: date.startDate
+      });
+    } else if (date.endDate) {
+      this.setState({
+        endDate: date.endDate
+      });
+    }
+  };
+
+  handleFocusChange = (focusedInput) => {
     this.setState({
-      value: range
+      focusedInput: focusedInput,
     });
-
-    this.props.onDateSelected(range);
-    this.closeDropdownOnTimeout();
   };
 
   handleHighlightRange = (range) => {
@@ -212,19 +241,10 @@ class DateRangeInput extends Component {
       return;
     }
 
-    // @Note: We're directly changing state of the dateRangePicker
-    // This has the potential to break as they update their library
-    /*this.refs.dateRangePicker.setState({
-      selectedStartDate: null,
-      highlightedRange: range,
-      highlightedDate: null,
-      hideSelection: true,
-      year: range.start.year(),
-      month: range.start.month()
-    });*/
-
     this.setState({
-      value: range
+      value: range,
+      startDate: range.start,
+      endDate: range.end
     });
   };
 
@@ -233,60 +253,26 @@ class DateRangeInput extends Component {
       return;
     }
 
-    /*let now = moment();
-
-    // @Note: We're directly changing state of the dateRangePicker
-    // This has the potential to break as they update their library
-    this.refs.dateRangePicker.setState({
-      selectedStartDate: null,
-      highlightedRange: null,
-      highlightedDate: null,
-      hideSelection: true,
-      year: now.year(),
-      month: now.month()
-    });*/
-
     this.setState({
-      value: this.selectedValue
+      value: this.selectedValue,
+      startDate: this.selectedValue.start,
+      endDate: this.selectedValue.end
     });
   };
 
-  handleShowCustomRange = () => {
-    if (!this.isCalendarOpen()) {
-      return;
-    }
-
-    // @Note: We're directly changing state of the dateRangePicker
-    // This has the potential to break as they update their library
-    // this.refs.dateRangePicker.setState({
-    //   hideSelection: false
-    // });
-
-    // TODO: Handle custom range
-    // this.setState({
-    //   value: null
-    // });
-  };
-
-  handleHideCustomRange = () => {
-    if (!this.isCalendarOpen()) {
-      return;
-    }
-
-    // @Note: We're directly changing state of the dateRangePicker
-    // This has the potential to break as they update their library
-    // this.refs.dateRangePicker.setState({
-    //   hideSelection: true
-    // });
-
-    // this.setState({
-    //   value: this.selectedValue
-    // });
-  };
-
   clearSelectedRange = () => {
+    let focusedInput = null;
+    if (!this.state.focusedInput) {
+      focusedInput = 'startDate';
+    }
     this.setState({
-      value: null
+      value: {
+        start: null,
+        end: null
+      },
+      startDate: null,
+      endDate: null,
+      focusedInput
     });
   };
 
@@ -301,17 +287,15 @@ class DateRangeInput extends Component {
   };
 
   isValueCustomRange = () => {
-    if (this.state.value === null) {
+    if (this.state.value.start === null || this.state.value.end === null) {
       return false;
-    }
-
-    if (this.state.value.calendarOpen) {
-      return true;
     }
 
     let isCustom = true;
     this.props.ranges.forEach((range) => {
-      if (this.state.value.isSame(range.value)) {
+      if (this.state.startDate.isSame(range.value.start)
+        && this.state.endDate.isSame(range.value.end)
+      ) {
         isCustom = false;
       }
     });
@@ -319,87 +303,23 @@ class DateRangeInput extends Component {
     return isCustom;
   };
 
-  // renderPicker = () => {
-  //   let fromElementId = 'startDate';
-  //   let toElementId = 'endDate';
-  //   if (!this.props.showDefaultDates) {
-  //     fromElementId = 'headerStartDate';
-  //     toElementId = 'headerEndDate';
-  //   }
-
-  //   /*
-  //   Old Props
-  //   numberOfCalendars: this.state.numCalendars,
-  //     value: this.state.value,
-  //     onSelect: this.handleDatePickerSelect,
-  //     singleDateRange: this.props.selectSingleDay,
-  //    */
-  //   let props = {
-  //     ref: 'dateRangePicker',
-  //     onDatesChange: this.props.handleDateChange,
-  //     onFocusChange: this.props.handleFocusChange,
-  //     numberOfMonths: this.state.numCalendars,
-  //     withPortal: false,
-  //     startDatePlaceholderText: 'From',
-  //     endDatePlaceholderText: 'To',
-  //     orientation: 'horizontal',
-  //     showClearDates: false,
-  //     startDateId: fromElementId,
-  //     endDateId: toElementId,
-  //     disabled: false,
-  //     focusedInput: this.props.focusedInput,
-  //     startDate: this.props.checkinDate,
-  //     endDate: this.props.checkoutDate,
-  //     hideKeyboardShortcutsPanel: true,
-  //     daySize: this.props.daySize,
-  //   };
-
-  //   let hasError = false;
-  //   if (this.props.errors.checkin_date || this.props.errors.checkout_date) {
-  //     hasError = true;
-  //   }
-
-  //   let wrapperClasses = classnames({
-  //     [this.props.wrapperClass]: true,
-  //     [this.props.wrapperClass + '--dateError']: hasError,
-  //     /*[this.props.wrapperClass + '--editable']: !isMobile(),*/
-  //     [this.props.wrapperClass + '--daySize-' + this.props.daySize]: true
-  //   });
-
-  //   if (this.props.minimumDate) {
-  //     props.minimumDate = this.props.minimumDate;
-  //   }
-
-  //   if (this.props.maximumDate) {
-  //     props.maximumDate = this.props.maximumDate;
-  //   }
-
-  //   return (
-  //     <div className={wrapperClasses}>
-  //       <DateRangePicker {...props} />
-  //     </div>
-  //   );
-  // };
-
   renderCalendar = () => {
     let props = {
       onDatesChange: this.handleDateChange,
-      onFocusChange: this.props.handleFocusChange,
+      onFocusChange: this.handleFocusChange,
       numberOfMonths: this.state.numCalendars,
       withPortal: false,
       orientation: 'horizontal',
-      focusedInput: this.props.focusedInput,
-      startDate: this.props.checkinDate,
-      endDate: this.props.checkoutDate,
+      focusedInput: this.state.focusedInput,
+      startDate: this.state.startDate,
+      endDate: this.state.endDate,
       hideKeyboardShortcutsPanel: true,
       daySize: this.props.daySize,
     };
 
     return (
       <DayPickerRangeController
-          {...props}
-          startDate={this.state.value.start}
-          endDate={this.state.value.end}
+        {...props}
       />
     );
   };
@@ -452,7 +372,7 @@ class DateRangeInput extends Component {
               onMouseEnter={this.handleShowCustomRange}
               onMouseLeave={this.handleHideCustomRange}
               className={classnames(customRangeClasses)}
-              onClick={this.showCalendar}
+              onClick={this.clearSelectedRange}
             >
               Custom Range
             </button>
@@ -469,7 +389,8 @@ class DateRangeInput extends Component {
       var classes = {
         'dateRangeInput__rangeButton': true,
         'dateRangeInput__rangeButton--active':
-          this.state.value.isSame(range.value)
+          this.hasValidDate()
+            && this.state.value.isSame(range.value)
       };
 
       if (this.state.calendarOpen) {
