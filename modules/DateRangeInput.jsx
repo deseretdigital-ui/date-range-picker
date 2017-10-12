@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
-import DateRangePicker from 'react-daterange-picker';
+import {DateRangePicker} from 'react-dates';
 import moment from 'moment';
 import {} from 'moment-range';
 import classnames from 'classnames';
@@ -74,7 +74,23 @@ class DateRangeInput extends Component {
     maximumDate: PropTypes.instanceOf(Date),
     minimumDate: PropTypes.instanceOf(Date),
     defaultDisplayValue: PropTypes.string,
-    selectSingleDay: PropTypes.bool
+    selectSingleDay: PropTypes.bool,
+
+    /* new props types for react-dates */
+    wrapperClass: PropTypes.string,
+    checkinDate: PropTypes.oneOfType([
+      PropTypes.object,
+      PropTypes.bool
+    ]),
+    checkoutDate: PropTypes.oneOfType([
+      PropTypes.object,
+      PropTypes.bool
+    ]),
+    errors: PropTypes.object,
+    handleDateChange: PropTypes.func,
+    handleFocusChange: PropTypes.func,
+    focusedInput: PropTypes.string,
+    daySize: PropTypes.number
   }
 
   static defaultProps = {
@@ -83,7 +99,20 @@ class DateRangeInput extends Component {
     alwaysShowCalendar: true,
     ranges: defaultRanges,
     defaultDisplayValue: 'Select a date range',
-    selectSingleDay: false
+    selectSingleDay: false,
+
+    /* new props for react-dates */
+    wrapperClass: 'DateInputWrapper',
+    checkinDate: null,
+    checkoutDate: null,
+    errors: {
+      checkin_date: false,
+      checkout_date: false
+    },
+    handleDateChange: () => { },
+    handleFocusChange: () => { },
+    focusedInput: null,
+    daySize: 39
   }
 
   componentDidMount() {
@@ -255,13 +284,51 @@ class DateRangeInput extends Component {
   }
 
   renderPicker = () => {
-    let props = {
-      ref: 'dateRangePicker',
-      numberOfCalendars: this.state.numCalendars,
+    let fromElementId = 'startDate';
+    let toElementId = 'endDate';
+    if (!this.props.showDefaultDates) {
+      fromElementId = 'headerStartDate';
+      toElementId = 'headerEndDate';
+    }
+
+    /*
+    Old Props
+    numberOfCalendars: this.state.numCalendars,
       value: this.state.value,
       onSelect: this.handleDatePickerSelect,
-      singleDateRange: this.props.selectSingleDay
+      singleDateRange: this.props.selectSingleDay,
+     */
+    let props = {
+      ref: 'dateRangePicker',
+      onDatesChange: this.props.handleDateChange,
+      onFocusChange: this.props.handleFocusChange,
+      numberOfMonths: this.state.numCalendars,
+      withPortal: false,
+      startDatePlaceholderText: 'From',
+      endDatePlaceholderText: 'To',
+      orientation: 'horizontal',
+      showClearDates: false,
+      startDateId: fromElementId,
+      endDateId: toElementId,
+      disabled: false,
+      focusedInput: this.props.focusedInput,
+      startDate: this.props.checkinDate,
+      endDate: this.props.checkoutDate,
+      hideKeyboardShortcutsPanel: true,
+      daySize: this.props.daySize,
     };
+
+    let hasError = false;
+    if (this.props.errors.checkin_date || this.props.errors.checkout_date) {
+      hasError = true;
+    }
+
+    let wrapperClasses = classnames({
+      [this.props.wrapperClass]: true,
+      [this.props.wrapperClass + '--dateError']: hasError,
+      /*[this.props.wrapperClass + '--editable']: !isMobile(),*/
+      [this.props.wrapperClass + '--daySize-' + this.props.daySize]: true
+    });
 
     if (this.props.minimumDate) {
       props.minimumDate = this.props.minimumDate;
@@ -272,16 +339,18 @@ class DateRangeInput extends Component {
     }
 
     return (
-      <DateRangePicker {...props} />
+      <div className={wrapperClasses}>
+        <DateRangePicker {...props} />
+      </div>
     );
   }
 
   renderDropdown = () => {
     if (!this.state.dropdownOpen) {
-      return null;
+      return '';
     }
 
-    let calendarWrapper = null;
+    let calendarWrapper = '';
     let calendarOpen = this.isCalendarOpen();
     if (calendarOpen) {
       calendarWrapper = (
