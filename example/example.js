@@ -38340,10 +38340,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 _reactDom2.default.render(_react2.default.createElement(_index2.default, null), document.getElementById('dateRangeExample'));
 
-// ReactDom.render(
-//   <DateRangeInput ranges={[]} />,
-//   document.getElementById('dateRangeExampleNoRanges')
-// );
+_reactDom2.default.render(_react2.default.createElement(_index2.default, { ranges: [] }), document.getElementById('dateRangeExampleNoRanges'));
 
 /***/ }),
 /* 299 */
@@ -38466,24 +38463,6 @@ var DateRangeInput = function (_Component) {
       window.removeEventListener('mousedown', this.closeDropdown);
       window.removeEventListener('touchstart', this.closeDropdown);
     }
-
-    // _isValueCustomRange = () => {
-    //   if (this.state.value.start === null || this.state.value.end === null) {
-    //     return false;
-    //   }
-
-    //   let isCustom = true;
-    //   this.props.ranges.forEach((range) => {
-    //     if (this.state.startDate.isSame(range.value.start)
-    //       && this.state.endDate.isSame(range.value.end)
-    //     ) {
-    //       isCustom = false;
-    //     }
-    //   });
-
-    //   return isCustom;
-    // };
-
   }, {
     key: 'render',
     value: function render() {
@@ -38591,17 +38570,10 @@ var _initialiseProps = function _initialiseProps() {
 
   this.closeDropdown = function (e) {
     var wrapper = _this3.dateRangeInputWrapper;
-    console.log(wrapper, e.target);
 
-    console.log('contains target?', wrapper.contains(e.target));
     if (wrapper && !wrapper.contains(e.target)) {
-      console.log('close Dropdown');
       _this3.closeDropdownOnTimeout();
     }
-  };
-
-  this.showCalendar = function () {
-    _this3.setState({ calendarOpen: true });
   };
 
   this.hasValidDate = function () {
@@ -38626,8 +38598,6 @@ var _initialiseProps = function _initialiseProps() {
   };
 
   this.handlePredefinedRangeSelect = function (range) {
-    // this.selectedValue = range;
-
     _this3.setState({
       value: range,
       startDate: range.start,
@@ -38644,7 +38614,7 @@ var _initialiseProps = function _initialiseProps() {
 
     if (date.startDate && date.endDate) {
       range = _moment2.default.range(date.startDate, date.endDate);
-      // this.selectedValue = range;
+
       _this3.setState({
         value: range,
         startDate: date.startDate,
@@ -38679,7 +38649,6 @@ var _initialiseProps = function _initialiseProps() {
     }
 
     _this3.setState({
-      // value: range,
       startDate: range.start,
       endDate: range.end
     });
@@ -38691,25 +38660,16 @@ var _initialiseProps = function _initialiseProps() {
     }
 
     _this3.setState({
-      // value: this.selectedValue,
       startDate: _this3.state.value.start,
       endDate: _this3.state.value.end
     });
   };
 
   this.clearSelectedRange = function () {
-    var focusedInput = null;
-    if (!_this3.state.focusedInput) {
-      focusedInput = 'startDate';
-    }
     _this3.setState({
-      // value: {
-      //   start: null,
-      //   end: null
-      // },
       startDate: null,
       endDate: null,
-      focusedInput: focusedInput
+      focusedInput: 'startDate'
     });
   };
 

@@ -259,14 +259,10 @@ class DateRangeInput extends Component {
   };
 
   clearSelectedRange = () => {
-    let focusedInput = null;
-    if (!this.state.focusedInput) {
-      focusedInput = 'startDate';
-    }
     this.setState({
       startDate: null,
       endDate: null,
-      focusedInput
+      focusedInput: 'startDate'
     });
   };
 

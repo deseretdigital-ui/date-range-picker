@@ -8,7 +8,7 @@ ReactDom.render(
   document.getElementById('dateRangeExample')
 );
 
-// ReactDom.render(
-//   <DateRangeInput ranges={[]} />,
-//   document.getElementById('dateRangeExampleNoRanges')
-// );
+ReactDom.render(
+  <DateRangeInput ranges={[]} />,
+  document.getElementById('dateRangeExampleNoRanges')
+);
