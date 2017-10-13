@@ -61,8 +61,8 @@ class DateRangeInput extends Component {
       calendarOpen: false,
       numCalendars: 2,
       value: props.defaultValue,
-      startDate: props.defaultValue.start,
-      endDate: props.defaultValue.end,
+      startDate: null,
+      endDate: null,
       focusedInput: null
     };
   }
@@ -79,21 +79,7 @@ class DateRangeInput extends Component {
     minimumDate: PropTypes.instanceOf(Date),
     defaultDisplayValue: PropTypes.string,
     selectSingleDay: PropTypes.bool,
-
-    /* new props types for react-dates */
     wrapperClass: PropTypes.string,
-    startDate: PropTypes.oneOfType([
-      PropTypes.object,
-      PropTypes.bool
-    ]),
-    endDate: PropTypes.oneOfType([
-      PropTypes.object,
-      PropTypes.bool
-    ]),
-    errors: PropTypes.object,
-    handleDateChange: PropTypes.func,
-    handleFocusChange: PropTypes.func,
-    focusedInput: PropTypes.string,
     daySize: PropTypes.number
   };
 
@@ -103,19 +89,8 @@ class DateRangeInput extends Component {
     alwaysShowCalendar: true,
     ranges: defaultRanges,
     defaultDisplayValue: 'Select a date range',
-    selectSingleDay: false,
-
-    /* new props for react-dates */
+    selectSingleDay: true,
     wrapperClass: 'DateInputWrapper',
-    startDate: null,
-    endDate: null,
-    errors: {
-      start_date: false,
-      end_date: false
-    },
-    handleDateChange: () => { },
-    handleFocusChange: () => { },
-    focusedInput: null,
     daySize: 36
   };
 
@@ -154,7 +129,9 @@ class DateRangeInput extends Component {
 
     if (dropdownOpen) {
       if (this.props.ranges.length === 0) {
-        this.clearSelectedRange();
+        this.setState({
+          focusedInput: 'startDate'
+        });
       }
     }
   };
@@ -170,7 +147,10 @@ class DateRangeInput extends Component {
   hasValidDate= () => {
     let isValid = false;
 
-    if (this.state.value) {
+    if (this.state.value
+      && this.state.value.start instanceof moment
+      && this.state.value.start instanceof moment
+    ) {
       isValid = true;
     }
 
@@ -204,6 +184,17 @@ class DateRangeInput extends Component {
 
   handleDateChange = (date) => {
     let range;
+
+    // When picking new start date and we already have
+    // an end date, let's clear the end date and
+    // allow picking a new one. Otherwise, the
+    // calendar will close before we have a chance to
+    // select a new end date.
+    if (this.state.startDate instanceof moment
+      && date.startDate.isBefore(this.state.startDate)
+    ) {
+      date.endDate = null;
+    }
 
     if (date.startDate && date.endDate) {
       range = moment.range(date.startDate, date.endDate);
@@ -266,6 +257,28 @@ class DateRangeInput extends Component {
     });
   };
 
+  handleIsOutsideRange = (day) => {
+    let outside = false;
+    let minDate = null;
+    let maxDate = null;
+
+    if (this.props.minimumDate) {
+      minDate = moment(this.props.minimumDate);
+      if (day.isBefore(minDate)) {
+        outside = true;
+      }
+    }
+
+    if (this.props.maximumDate) {
+      maxDate = moment(this.props.maximumDate);
+      if (day.isAfter(maxDate)) {
+        outside = true;
+      }
+    }
+
+    return outside;
+  };
+
   closeDropdownOnTimeout = () => {
     setTimeout(() => {
       this.setState({
@@ -298,6 +311,7 @@ class DateRangeInput extends Component {
       onDatesChange: this.handleDateChange,
       onFocusChange: this.handleFocusChange,
       numberOfMonths: this.state.numCalendars,
+      isOutsideRange: this.handleIsOutsideRange,
       withPortal: false,
       orientation: 'horizontal',
       focusedInput: this.state.focusedInput,
@@ -404,9 +418,14 @@ class DateRangeInput extends Component {
   };
 
   render() {
+    let wrapperClasses = classnames({
+      dateRangeInput: true,
+      [this.props.wrapperClass]: true
+    });
+
     return (
       <div
-        className="dateRangeInput"
+        className={wrapperClasses}
         ref={ref => this.dateRangeInputWrapper = ref }
       >
         <button className="dateRangeInput__input"

@@ -38338,9 +38338,26 @@ __webpack_require__(469);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+var date = new Date();
+var lastMonth = new Date();
+var nextMonth = new Date();
+
+lastMonth.setMonth(date.getMonth() - 1);
+lastMonth.setDate(14);
+
+nextMonth.setMonth(date.getMonth() + 1);
+nextMonth.setDate(16);
+
 _reactDom2.default.render(_react2.default.createElement(_index2.default, null), document.getElementById('dateRangeExample'));
 
 _reactDom2.default.render(_react2.default.createElement(_index2.default, { ranges: [] }), document.getElementById('dateRangeExampleNoRanges'));
+
+_reactDom2.default.render(_react2.default.createElement(_index2.default, {
+  minimumDate: lastMonth,
+  maximumDate: nextMonth,
+  ranges: [],
+  defaultValue: {}
+}), document.getElementById('dateRangeExampleNoRangesBlockedDates'));
 
 /***/ }),
 /* 299 */
@@ -38393,11 +38410,13 @@ var _moment2 = _interopRequireDefault(_moment);
 
 __webpack_require__(468);
 
-var _classnames = __webpack_require__(18);
+var _classnames2 = __webpack_require__(18);
 
-var _classnames2 = _interopRequireDefault(_classnames);
+var _classnames3 = _interopRequireDefault(_classnames2);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -38442,8 +38461,8 @@ var DateRangeInput = function (_Component) {
       calendarOpen: false,
       numCalendars: 2,
       value: props.defaultValue,
-      startDate: props.defaultValue.start,
-      endDate: props.defaultValue.end,
+      startDate: null,
+      endDate: null,
       focusedInput: null
     };
     return _this;
@@ -38468,10 +38487,14 @@ var DateRangeInput = function (_Component) {
     value: function render() {
       var _this2 = this;
 
+      var wrapperClasses = (0, _classnames3.default)(_defineProperty({
+        dateRangeInput: true
+      }, this.props.wrapperClass, true));
+
       return _react2.default.createElement(
         'div',
         {
-          className: 'dateRangeInput',
+          className: wrapperClasses,
           ref: function ref(_ref) {
             return _this2.dateRangeInputWrapper = _ref;
           }
@@ -38504,15 +38527,7 @@ DateRangeInput.propTypes = {
   minimumDate: _propTypes2.default.instanceOf(Date),
   defaultDisplayValue: _propTypes2.default.string,
   selectSingleDay: _propTypes2.default.bool,
-
-  /* new props types for react-dates */
   wrapperClass: _propTypes2.default.string,
-  startDate: _propTypes2.default.oneOfType([_propTypes2.default.object, _propTypes2.default.bool]),
-  endDate: _propTypes2.default.oneOfType([_propTypes2.default.object, _propTypes2.default.bool]),
-  errors: _propTypes2.default.object,
-  handleDateChange: _propTypes2.default.func,
-  handleFocusChange: _propTypes2.default.func,
-  focusedInput: _propTypes2.default.string,
   daySize: _propTypes2.default.number
 };
 DateRangeInput.defaultProps = {
@@ -38521,19 +38536,8 @@ DateRangeInput.defaultProps = {
   alwaysShowCalendar: true,
   ranges: defaultRanges,
   defaultDisplayValue: 'Select a date range',
-  selectSingleDay: false,
-
-  /* new props for react-dates */
+  selectSingleDay: true,
   wrapperClass: 'DateInputWrapper',
-  startDate: null,
-  endDate: null,
-  errors: {
-    start_date: false,
-    end_date: false
-  },
-  handleDateChange: function handleDateChange() {},
-  handleFocusChange: function handleFocusChange() {},
-  focusedInput: null,
   daySize: 36
 };
 
@@ -38563,7 +38567,9 @@ var _initialiseProps = function _initialiseProps() {
 
     if (dropdownOpen) {
       if (_this3.props.ranges.length === 0) {
-        _this3.clearSelectedRange();
+        _this3.setState({
+          focusedInput: 'startDate'
+        });
       }
     }
   };
@@ -38579,7 +38585,7 @@ var _initialiseProps = function _initialiseProps() {
   this.hasValidDate = function () {
     var isValid = false;
 
-    if (_this3.state.value) {
+    if (_this3.state.value && _this3.state.value.start instanceof _moment2.default && _this3.state.value.start instanceof _moment2.default) {
       isValid = true;
     }
 
@@ -38611,6 +38617,15 @@ var _initialiseProps = function _initialiseProps() {
 
   this.handleDateChange = function (date) {
     var range = void 0;
+
+    // When picking new start date and we already have
+    // an end date, let's clear the end date and
+    // allow picking a new one. Otherwise, the
+    // calendar will close before we have a chance to
+    // select a new end date.
+    if (_this3.state.startDate instanceof _moment2.default && date.startDate.isBefore(_this3.state.startDate)) {
+      date.endDate = null;
+    }
 
     if (date.startDate && date.endDate) {
       range = _moment2.default.range(date.startDate, date.endDate);
@@ -38673,6 +38688,28 @@ var _initialiseProps = function _initialiseProps() {
     });
   };
 
+  this.handleIsOutsideRange = function (day) {
+    var outside = false;
+    var minDate = null;
+    var maxDate = null;
+
+    if (_this3.props.minimumDate) {
+      minDate = (0, _moment2.default)(_this3.props.minimumDate);
+      if (day.isBefore(minDate)) {
+        outside = true;
+      }
+    }
+
+    if (_this3.props.maximumDate) {
+      maxDate = (0, _moment2.default)(_this3.props.maximumDate);
+      if (day.isAfter(maxDate)) {
+        outside = true;
+      }
+    }
+
+    return outside;
+  };
+
   this.closeDropdownOnTimeout = function () {
     setTimeout(function () {
       _this3.setState({
@@ -38705,6 +38742,7 @@ var _initialiseProps = function _initialiseProps() {
       onDatesChange: _this3.handleDateChange,
       onFocusChange: _this3.handleFocusChange,
       numberOfMonths: _this3.state.numCalendars,
+      isOutsideRange: _this3.handleIsOutsideRange,
       withPortal: false,
       orientation: 'horizontal',
       focusedInput: _this3.state.focusedInput,
@@ -38741,7 +38779,7 @@ var _initialiseProps = function _initialiseProps() {
 
     return _react2.default.createElement(
       'div',
-      { className: (0, _classnames2.default)(dropdownClasses) },
+      { className: (0, _classnames3.default)(dropdownClasses) },
       _this3.renderRanges(),
       calendarWrapper
     );
@@ -38769,7 +38807,7 @@ var _initialiseProps = function _initialiseProps() {
               type: 'button',
               onMouseEnter: _this3.handleShowCustomRange,
               onMouseLeave: _this3.handleHideCustomRange,
-              className: (0, _classnames2.default)(customRangeClasses),
+              className: (0, _classnames3.default)(customRangeClasses),
               onClick: _this3.clearSelectedRange
             },
             'Custom Range'
@@ -38800,7 +38838,7 @@ var _initialiseProps = function _initialiseProps() {
             type: 'button',
             onMouseEnter: _this3.handleHighlightRange.bind(null, range.value),
             onMouseLeave: _this3.handleUnhighlightRange,
-            className: (0, _classnames2.default)(classes),
+            className: (0, _classnames3.default)(classes),
             onClick: _this3.handlePredefinedRangeSelect.bind(null, range.value)
           },
           range.label
