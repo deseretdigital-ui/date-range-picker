@@ -38340,7 +38340,10 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 _reactDom2.default.render(_react2.default.createElement(_index2.default, null), document.getElementById('dateRangeExample'));
 
-_reactDom2.default.render(_react2.default.createElement(_index2.default, { ranges: [] }), document.getElementById('dateRangeExampleNoRanges'));
+// ReactDom.render(
+//   <DateRangeInput ranges={[]} />,
+//   document.getElementById('dateRangeExampleNoRanges')
+// );
 
 /***/ }),
 /* 299 */
@@ -38436,7 +38439,7 @@ var DateRangeInput = function (_Component) {
     _initialiseProps.call(_this);
 
     _this.mediaQuery = null;
-    _this.selectedValue = props.defaultValue;
+
     _this.state = {
       dropdownOpen: false,
       calendarOpen: false,
@@ -38463,12 +38466,37 @@ var DateRangeInput = function (_Component) {
       window.removeEventListener('mousedown', this.closeDropdown);
       window.removeEventListener('touchstart', this.closeDropdown);
     }
+
+    // _isValueCustomRange = () => {
+    //   if (this.state.value.start === null || this.state.value.end === null) {
+    //     return false;
+    //   }
+
+    //   let isCustom = true;
+    //   this.props.ranges.forEach((range) => {
+    //     if (this.state.startDate.isSame(range.value.start)
+    //       && this.state.endDate.isSame(range.value.end)
+    //     ) {
+    //       isCustom = false;
+    //     }
+    //   });
+
+    //   return isCustom;
+    // };
+
   }, {
     key: 'render',
     value: function render() {
+      var _this2 = this;
+
       return _react2.default.createElement(
         'div',
-        { className: 'dateRangeInput', ref: 'dateRangeInputWrapper' },
+        {
+          className: 'dateRangeInput',
+          ref: function ref(_ref) {
+            return _this2.dateRangeInputWrapper = _ref;
+          }
+        },
         _react2.default.createElement(
           'button',
           { className: 'dateRangeInput__input',
@@ -38531,48 +38559,55 @@ DateRangeInput.defaultProps = {
 };
 
 var _initialiseProps = function _initialiseProps() {
-  var _this2 = this;
+  var _this3 = this;
 
   this.addMediaMatch = function () {
-    _this2.mediaQuery = window.matchMedia('only screen and (max-width: 980px)');
-    _this2.mediaQuery.addListener(_this2.observeMediaQuery);
+    _this3.mediaQuery = window.matchMedia('only screen and (max-width: 979px)');
+    _this3.mediaQuery.addListener(_this3.observeMediaQuery);
 
-    _this2.observeMediaQuery();
+    _this3.observeMediaQuery();
   };
 
   this.observeMediaQuery = function () {
-    var numCalendars = _this2.mediaQuery.matches ? 1 : 2;
+    var numCalendars = _this3.mediaQuery.matches ? 1 : 2;
 
-    _this2.setState({ numCalendars: numCalendars });
+    _this3.setState({ numCalendars: numCalendars });
   };
 
   this.toggleDropdown = function () {
-    var dropdownOpen = !_this2.state.dropdownOpen;
-    _this2.setState({ dropdownOpen: dropdownOpen });
+    var dropdownOpen = !_this3.state.dropdownOpen;
+    var focusedInput = _this3.state.dropdownOpen ? null : 'startDate';
+    _this3.setState({
+      dropdownOpen: dropdownOpen,
+      focusedInput: focusedInput
+    });
 
     if (dropdownOpen) {
-      if (_this2.props.ranges.length === 0) {
-        _this2.clearSelectedRange();
+      if (_this3.props.ranges.length === 0) {
+        _this3.clearSelectedRange();
       }
     }
   };
 
   this.closeDropdown = function (e) {
-    var wrapper = _this2.refs.dateRangeInputWrapper;
+    var wrapper = _this3.dateRangeInputWrapper;
+    console.log(wrapper, e.target);
 
+    console.log('contains target?', wrapper.contains(e.target));
     if (wrapper && !wrapper.contains(e.target)) {
-      _this2.closeDropdownOnTimeout();
+      console.log('close Dropdown');
+      _this3.closeDropdownOnTimeout();
     }
   };
 
   this.showCalendar = function () {
-    _this2.setState({ calendarOpen: true });
+    _this3.setState({ calendarOpen: true });
   };
 
   this.hasValidDate = function () {
     var isValid = false;
 
-    if (_this2.state.startDate && _this2.state.endDate) {
+    if (_this3.state.value) {
       isValid = true;
     }
 
@@ -38580,28 +38615,28 @@ var _initialiseProps = function _initialiseProps() {
   };
 
   this.getDisplayValue = function () {
-    var displayValue = _this2.props.defaultDisplayValue;
+    var displayValue = _this3.props.defaultDisplayValue;
 
-    if (_this2.hasValidDate()) {
+    if (_this3.hasValidDate()) {
       var displayFormat = 'DD MMM YYYY';
-      displayValue = _this2.state.startDate.format(displayFormat) + ' - ' + _this2.state.endDate.format(displayFormat);
+      displayValue = _this3.state.value.start.format(displayFormat) + ' - ' + _this3.state.value.end.format(displayFormat);
     }
 
     return displayValue;
   };
 
   this.handlePredefinedRangeSelect = function (range) {
-    _this2.selectedValue = range;
+    // this.selectedValue = range;
 
-    _this2.setState({
+    _this3.setState({
       value: range,
       startDate: range.start,
       endDate: range.end,
       calendarOpen: false
     });
 
-    _this2.props.onDateSelected(range);
-    _this2.closeDropdownOnTimeout();
+    _this3.props.onDateSelected(range);
+    _this3.closeDropdownOnTimeout();
   };
 
   this.handleDateChange = function (date) {
@@ -38609,67 +38644,69 @@ var _initialiseProps = function _initialiseProps() {
 
     if (date.startDate && date.endDate) {
       range = _moment2.default.range(date.startDate, date.endDate);
-      _this2.selectedValue = range;
-      _this2.setState({
+      // this.selectedValue = range;
+      _this3.setState({
         value: range,
         startDate: date.startDate,
         endDate: date.endDate,
         calendarOpen: false
       });
 
-      _this2.props.onDateSelected(range);
-      _this2.closeDropdownOnTimeout();
+      _this3.props.onDateSelected(range);
+      _this3.closeDropdownOnTimeout();
     } else if (date.startDate) {
-      _this2.setState({
-        startDate: date.startDate
+      _this3.setState({
+        startDate: date.startDate,
+        endDate: null
       });
     } else if (date.endDate) {
-      _this2.setState({
-        endDate: date.endDate
+      _this3.setState({
+        endDate: date.endDate,
+        startDate: null
       });
     }
   };
 
   this.handleFocusChange = function (focusedInput) {
-    _this2.setState({
+    _this3.setState({
       focusedInput: focusedInput
     });
   };
 
   this.handleHighlightRange = function (range) {
-    if (!_this2.isCalendarOpen()) {
+    if (!_this3.isCalendarOpen()) {
       return;
     }
 
-    _this2.setState({
-      value: range,
+    _this3.setState({
+      // value: range,
       startDate: range.start,
       endDate: range.end
     });
   };
 
   this.handleUnhighlightRange = function () {
-    if (!_this2.isCalendarOpen()) {
+    if (!_this3.isCalendarOpen()) {
       return;
     }
 
-    _this2.setState({
-      value: _this2.selectedValue,
-      startDate: _this2.selectedValue.start,
-      endDate: _this2.selectedValue.end
+    _this3.setState({
+      // value: this.selectedValue,
+      startDate: _this3.state.value.start,
+      endDate: _this3.state.value.end
     });
   };
 
   this.clearSelectedRange = function () {
     var focusedInput = null;
-    if (!_this2.state.focusedInput) {
+    if (!_this3.state.focusedInput) {
       focusedInput = 'startDate';
     }
-    _this2.setState({
-      value: {
-        start: null,
-        end: null
-      },
+    _this3.setState({
+      // value: {
+      //   start: null,
+      //   end: null
+      // },
       startDate: null,
       endDate: null,
       focusedInput: focusedInput
@@ -38678,22 +38715,24 @@ var _initialiseProps = function _initialiseProps() {
 
   this.closeDropdownOnTimeout = function () {
     setTimeout(function () {
-      _this2.setState({ 'dropdownOpen': false });
+      _this3.setState({
+        dropdownOpen: false
+      });
     }, 0);
   };
 
   this.isCalendarOpen = function () {
-    return _this2.props.alwaysShowCalendar || _this2.state.calendarOpen;
+    return _this3.props.alwaysShowCalendar || _this3.state.calendarOpen;
   };
 
   this.isValueCustomRange = function () {
-    if (_this2.state.value.start === null || _this2.state.value.end === null) {
+    if (_this3.state.value === null) {
       return false;
     }
 
     var isCustom = true;
-    _this2.props.ranges.forEach(function (range) {
-      if (_this2.state.startDate.isSame(range.value.start) && _this2.state.endDate.isSame(range.value.end)) {
+    _this3.props.ranges.forEach(function (range) {
+      if (_this3.state.value.isSame(range.value)) {
         isCustom = false;
       }
     });
@@ -38703,46 +38742,47 @@ var _initialiseProps = function _initialiseProps() {
 
   this.renderCalendar = function () {
     var props = {
-      onDatesChange: _this2.handleDateChange,
-      onFocusChange: _this2.handleFocusChange,
-      numberOfMonths: _this2.state.numCalendars,
+      onDatesChange: _this3.handleDateChange,
+      onFocusChange: _this3.handleFocusChange,
+      numberOfMonths: _this3.state.numCalendars,
       withPortal: false,
       orientation: 'horizontal',
-      focusedInput: _this2.state.focusedInput,
-      startDate: _this2.state.startDate,
-      endDate: _this2.state.endDate,
+      focusedInput: _this3.state.focusedInput,
+      startDate: _this3.state.startDate,
+      endDate: _this3.state.endDate,
       hideKeyboardShortcutsPanel: true,
-      daySize: _this2.props.daySize
+      daySize: _this3.props.daySize,
+      minimumNights: 0
     };
 
     return _react2.default.createElement(_reactDates.DayPickerRangeController, props);
   };
 
   this.renderDropdown = function () {
-    if (!_this2.state.dropdownOpen) {
+    if (!_this3.state.dropdownOpen) {
       return '';
     }
 
     var calendarWrapper = '';
-    var calendarOpen = _this2.isCalendarOpen();
+    var calendarOpen = _this3.isCalendarOpen();
     if (calendarOpen) {
       calendarWrapper = _react2.default.createElement(
         'div',
         { className: 'dateRangeInput__calendarWrapper' },
-        _this2.renderCalendar()
+        _this3.renderCalendar()
       );
     }
 
     var dropdownClasses = {
       'dateRangeInput__dropdown': true,
       'dateRangeInput__dropdown--calendar-open': calendarOpen,
-      'dateRangeInput__dropdown--has-ranges': _this2.props.ranges.length > 0
+      'dateRangeInput__dropdown--has-ranges': _this3.props.ranges.length > 0
     };
 
     return _react2.default.createElement(
       'div',
       { className: (0, _classnames2.default)(dropdownClasses) },
-      _this2.renderRanges(),
+      _this3.renderRanges(),
       calendarWrapper
     );
   };
@@ -38750,16 +38790,16 @@ var _initialiseProps = function _initialiseProps() {
   this.renderRanges = function () {
     var customRangeClasses = {
       'dateRangeInput__rangeButton': true,
-      'dateRangeInput__rangeButton--active': _this2.isValueCustomRange() || _this2.state.calendarOpen
+      'dateRangeInput__rangeButton--active': _this3.isValueCustomRange() || _this3.state.calendarOpen
     };
 
     var ranges = '';
 
-    if (_this2.props.ranges.length > 0) {
+    if (_this3.props.ranges.length > 0) {
       ranges = _react2.default.createElement(
         'ul',
         { className: 'dateRangeInput__defined-ranges' },
-        _this2.renderRangeItems(),
+        _this3.renderRangeItems(),
         _react2.default.createElement(
           'li',
           null,
@@ -38767,10 +38807,10 @@ var _initialiseProps = function _initialiseProps() {
             'button',
             {
               type: 'button',
-              onMouseEnter: _this2.handleShowCustomRange,
-              onMouseLeave: _this2.handleHideCustomRange,
+              onMouseEnter: _this3.handleShowCustomRange,
+              onMouseLeave: _this3.handleHideCustomRange,
               className: (0, _classnames2.default)(customRangeClasses),
-              onClick: _this2.clearSelectedRange
+              onClick: _this3.clearSelectedRange
             },
             'Custom Range'
           )
@@ -38782,13 +38822,13 @@ var _initialiseProps = function _initialiseProps() {
   };
 
   this.renderRangeItems = function () {
-    return _this2.props.ranges.map(function (range) {
+    return _this3.props.ranges.map(function (range) {
       var classes = {
         'dateRangeInput__rangeButton': true,
-        'dateRangeInput__rangeButton--active': _this2.hasValidDate() && _this2.state.value.isSame(range.value)
+        'dateRangeInput__rangeButton--active': _this3.hasValidDate() && _this3.state.value.isSame(range.value)
       };
 
-      if (_this2.state.calendarOpen) {
+      if (_this3.state.calendarOpen) {
         classes['dateRangeInput__rangeButton--active'] = false;
       }
       return _react2.default.createElement(
@@ -38798,10 +38838,10 @@ var _initialiseProps = function _initialiseProps() {
           'button',
           {
             type: 'button',
-            onMouseEnter: _this2.handleHighlightRange.bind(null, range.value),
-            onMouseLeave: _this2.handleUnhighlightRange,
+            onMouseEnter: _this3.handleHighlightRange.bind(null, range.value),
+            onMouseLeave: _this3.handleUnhighlightRange,
             className: (0, _classnames2.default)(classes),
-            onClick: _this2.handlePredefinedRangeSelect.bind(null, range.value)
+            onClick: _this3.handlePredefinedRangeSelect.bind(null, range.value)
           },
           range.label
         )

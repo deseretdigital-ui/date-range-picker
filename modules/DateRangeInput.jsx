@@ -55,7 +55,7 @@ class DateRangeInput extends Component {
     super(props);
 
     this.mediaQuery = null;
-    this.selectedValue = props.defaultValue;
+
     this.state = {
       dropdownOpen: false,
       calendarOpen: false,
@@ -132,7 +132,7 @@ class DateRangeInput extends Component {
   }
 
   addMediaMatch = () => {
-    this.mediaQuery = window.matchMedia('only screen and (max-width: 980px)');
+    this.mediaQuery = window.matchMedia('only screen and (max-width: 979px)');
     this.mediaQuery.addListener(this.observeMediaQuery);
 
     this.observeMediaQuery();
@@ -146,7 +146,11 @@ class DateRangeInput extends Component {
 
   toggleDropdown = () => {
     let dropdownOpen = !this.state.dropdownOpen;
-    this.setState({dropdownOpen});
+    let focusedInput = this.state.dropdownOpen ? null : 'startDate';
+    this.setState({
+      dropdownOpen,
+      focusedInput
+    });
 
     if (dropdownOpen) {
       if (this.props.ranges.length === 0) {
@@ -156,21 +160,17 @@ class DateRangeInput extends Component {
   };
 
   closeDropdown = (e) => {
-    let wrapper = this.refs.dateRangeInputWrapper;
+    let wrapper = this.dateRangeInputWrapper;
 
     if (wrapper && !wrapper.contains(e.target)) {
       this.closeDropdownOnTimeout();
     }
   };
 
-  showCalendar = () => {
-    this.setState({calendarOpen: true});
-  };
-
   hasValidDate= () => {
     let isValid = false;
 
-    if (this.state.startDate && this.state.endDate) {
+    if (this.state.value) {
       isValid = true;
     }
 
@@ -182,17 +182,15 @@ class DateRangeInput extends Component {
 
     if (this.hasValidDate()) {
       let displayFormat = 'DD MMM YYYY'
-      displayValue = this.state.startDate.format(displayFormat)
+      displayValue = this.state.value.start.format(displayFormat)
         + ' - '
-        + this.state.endDate.format(displayFormat);
+        + this.state.value.end.format(displayFormat);
     }
 
     return displayValue;
   };
 
   handlePredefinedRangeSelect = (range) => {
-    this.selectedValue = range;
-
     this.setState({
       value: range,
       startDate: range.start,
@@ -209,7 +207,7 @@ class DateRangeInput extends Component {
 
     if (date.startDate && date.endDate) {
       range = moment.range(date.startDate, date.endDate);
-      this.selectedValue = range;
+
       this.setState({
         value: range,
         startDate: date.startDate,
@@ -221,11 +219,13 @@ class DateRangeInput extends Component {
       this.closeDropdownOnTimeout();
     } else if (date.startDate) {
       this.setState({
-        startDate: date.startDate
+        startDate: date.startDate,
+        endDate: null
       });
     } else if (date.endDate) {
       this.setState({
-        endDate: date.endDate
+        endDate: date.endDate,
+        startDate: null
       });
     }
   };
@@ -242,7 +242,6 @@ class DateRangeInput extends Component {
     }
 
     this.setState({
-      value: range,
       startDate: range.start,
       endDate: range.end
     });
@@ -254,9 +253,8 @@ class DateRangeInput extends Component {
     }
 
     this.setState({
-      value: this.selectedValue,
-      startDate: this.selectedValue.start,
-      endDate: this.selectedValue.end
+      startDate: this.state.value.start,
+      endDate: this.state.value.end
     });
   };
 
@@ -266,10 +264,6 @@ class DateRangeInput extends Component {
       focusedInput = 'startDate';
     }
     this.setState({
-      value: {
-        start: null,
-        end: null
-      },
       startDate: null,
       endDate: null,
       focusedInput
@@ -278,7 +272,9 @@ class DateRangeInput extends Component {
 
   closeDropdownOnTimeout = () => {
     setTimeout(() => {
-      this.setState({'dropdownOpen': false});
+      this.setState({
+        dropdownOpen: false
+      });
     }, 0);
   };
 
@@ -287,15 +283,13 @@ class DateRangeInput extends Component {
   };
 
   isValueCustomRange = () => {
-    if (this.state.value.start === null || this.state.value.end === null) {
+    if (this.state.value === null) {
       return false;
     }
 
     let isCustom = true;
     this.props.ranges.forEach((range) => {
-      if (this.state.startDate.isSame(range.value.start)
-        && this.state.endDate.isSame(range.value.end)
-      ) {
+      if (this.state.value.isSame(range.value)) {
         isCustom = false;
       }
     });
@@ -315,6 +309,7 @@ class DateRangeInput extends Component {
       endDate: this.state.endDate,
       hideKeyboardShortcutsPanel: true,
       daySize: this.props.daySize,
+      minimumNights: 0
     };
 
     return (
@@ -414,7 +409,10 @@ class DateRangeInput extends Component {
 
   render() {
     return (
-      <div className="dateRangeInput" ref="dateRangeInputWrapper">
+      <div
+        className="dateRangeInput"
+        ref={ref => this.dateRangeInputWrapper = ref }
+      >
         <button className="dateRangeInput__input"
           type="button"
           onClick={this.toggleDropdown}
