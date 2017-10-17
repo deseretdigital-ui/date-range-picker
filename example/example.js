@@ -38438,10 +38438,10 @@ var defaultRanges = [{
   'value': _moment2.default.range((0, _moment2.default)().startOf('day').subtract(29, 'days'), (0, _moment2.default)().startOf('day'))
 }, {
   'label': 'This Month',
-  'value': _moment2.default.range((0, _moment2.default)().startOf('day').startOf('month'), (0, _moment2.default)().startOf('day').endOf('month'))
+  'value': _moment2.default.range((0, _moment2.default)().startOf('month').startOf('day'), (0, _moment2.default)().endOf('month').startOf('day'))
 }, {
   'label': 'Last Month',
-  'value': _moment2.default.range((0, _moment2.default)().startOf('day').subtract(1, 'month').startOf('month'), (0, _moment2.default)().startOf('day').subtract(1, 'month').endOf('month'))
+  'value': _moment2.default.range((0, _moment2.default)().subtract(1, 'month').startOf('month').startOf('day'), (0, _moment2.default)().subtract(1, 'month').endOf('month').startOf('day'))
 }];
 
 var DateRangeInput = function (_Component) {
@@ -38628,7 +38628,7 @@ var _initialiseProps = function _initialiseProps() {
     }
 
     if (date.startDate && date.endDate) {
-      range = _moment2.default.range(date.startDate, date.endDate);
+      range = _moment2.default.range(date.startDate.startOf('day'), date.endDate.startOf('day'));
 
       _this3.setState({
         value: range,

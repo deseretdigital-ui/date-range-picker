@@ -37,15 +37,15 @@ const defaultRanges = [
   {
     'label': 'This Month',
     'value': moment.range(
-      moment().startOf('day').startOf('month'),
-      moment().startOf('day').endOf('month')
+      moment().startOf('month').startOf('day'),
+      moment().endOf('month').startOf('day')
     )
   },
   {
     'label': 'Last Month',
     'value': moment.range(
-      moment().startOf('day').subtract(1, 'month').startOf('month'),
-      moment().startOf('day').subtract(1, 'month').endOf('month')
+      moment().subtract(1, 'month').startOf('month').startOf('day'),
+      moment().subtract(1, 'month').endOf('month').startOf('day')
     )
   }
 ];
@@ -197,7 +197,10 @@ class DateRangeInput extends Component {
     }
 
     if (date.startDate && date.endDate) {
-      range = moment.range(date.startDate, date.endDate);
+      range = moment.range(
+        date.startDate.startOf('day'),
+        date.endDate.startOf('day')
+      );
 
       this.setState({
         value: range,
