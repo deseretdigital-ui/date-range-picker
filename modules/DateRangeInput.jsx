@@ -61,8 +61,8 @@ class DateRangeInput extends Component {
       calendarOpen: false,
       numCalendars: 2,
       value: props.defaultValue,
-      startDate: null,
-      endDate: null,
+      startDate: props.defaultValue.start || null,
+      endDate:  props.defaultValue.end || null,
       focusedInput: null
     };
   }
@@ -319,7 +319,8 @@ class DateRangeInput extends Component {
       endDate: this.state.endDate,
       hideKeyboardShortcutsPanel: true,
       daySize: this.props.daySize,
-      minimumNights: 0
+      minimumNights: 0,
+      initialVisibleMonth: this.getVisibleMonth
     };
 
     return (
