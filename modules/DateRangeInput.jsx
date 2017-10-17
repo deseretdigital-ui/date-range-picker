@@ -319,8 +319,7 @@ class DateRangeInput extends Component {
       endDate: this.state.endDate,
       hideKeyboardShortcutsPanel: true,
       daySize: this.props.daySize,
-      minimumNights: 0,
-      initialVisibleMonth: this.getVisibleMonth
+      minimumNights: 0
     };
 
     return (

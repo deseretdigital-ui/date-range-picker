@@ -38750,8 +38750,7 @@ var _initialiseProps = function _initialiseProps() {
       endDate: _this3.state.endDate,
       hideKeyboardShortcutsPanel: true,
       daySize: _this3.props.daySize,
-      minimumNights: 0,
-      initialVisibleMonth: _this3.getVisibleMonth
+      minimumNights: 0
     };
 
     return _react2.default.createElement(_reactDates.DayPickerRangeController, props);
