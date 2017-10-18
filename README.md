@@ -1,6 +1,6 @@
 # Date Range Input
 
-This is a wrapper around https://github.com/onefinestay/react-daterange-picker v1.1.0
+This is a wrapper around https://github.com/airbnb/react-dates v13.0.4
 
 This is the barebones version of the library. Currently, it's setup so you'll need to use ES6 imports to bring in the library and then compile it with WebPack.
 
@@ -17,7 +17,9 @@ This library uses window.matchMedia to control whether to show the one or two ca
 * minimumDate - The minimum date you want the user to be able to select.
 * maximumDate - The maximum date you want the user to be able to select.
 * defaultDisplayValue - The value that is displayed when no dates have been selected yet. Defaults to "Select a date range"
-* selectSingleDay - Enable or disable selecting a single day for the date range. Defaults to false.
+* selectSingleDay - Deprecated to always allowing picking a single date
+* wrapperClass - Allows you to pass in a string to add additional classes to the wrapper
+* daySize - This controls the size of the calendar days
 
 # Styles
 

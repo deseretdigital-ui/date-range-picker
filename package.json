@@ -1,6 +1,6 @@
 {
   "name": "ddm-date-range-input",
-  "version": "1.6.0",
+  "version": "2.0.0",
   "description": "React Date Range Input and Picker",
   "repository": {
     "type": "git",
@@ -24,13 +24,15 @@
     "build-css": "node-sass --output-style compressed --include-path scss scss/index.scss lib/styles.css",
     "build-example": "webpack",
     "watch-example": "webpack --watch",
-    "lint": "eslint modules/*"
+    "lint": "eslint modules/*",
+    "init": "yarn install --ignore-engines --pure-lockfile"
   },
   "dependencies": {
+    "airbnb-browser-shims": "^1.11.1",
     "classnames": "^2.2.5",
     "moment": "^2.10.6",
     "moment-range": "^2.0.3",
-    "react-daterange-picker": "^1.1.0"
+    "react-dates": "^12.4.0"
   },
   "devDependencies": {
     "babel-cli": "^6.24.1",
@@ -45,13 +47,15 @@
     "eslint-plugin-react": "^7.1.0",
     "node-sass": "^4.5.3",
     "react": "^15.6.1",
+    "react-addons-shallow-compare": "^15.6.0",
     "react-dom": "^15.6.1",
     "sass-loader": "^6.0.6",
     "style-loader": "^0.18.2",
+    "file-loader": "^1.1.5",
     "url-loader": "^0.5.9",
     "webpack": "^3.2.0"
   },
   "peerDependencies": {
-    "react": ">=0.14.0 <= 15.x.x"
+    "react": ">=15.x.x"
   }
 }
