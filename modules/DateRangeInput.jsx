@@ -56,13 +56,27 @@ class DateRangeInput extends Component {
 
     this.mediaQuery = null;
 
+    let value = null;
+    let startDate = null;
+    let endDate = null;
+
+    if (!props.ignoreDefault
+      && props.defaultValue
+      && props.defaultValue.start
+      && props.defaultValue.end
+    ) {
+      value = props.defaultValue;
+      startDate = props.defaultValue.start;
+      endDate = props.defaultValue.end;
+    }
+
     this.state = {
       dropdownOpen: false,
       calendarOpen: false,
       numCalendars: 2,
-      value: props.defaultValue,
-      startDate: props.defaultValue.start || null,
-      endDate:  props.defaultValue.end || null,
+      value: value,
+      startDate: startDate,
+      endDate:  endDate,
       focusedInput: null
     };
   }
@@ -74,7 +88,9 @@ class DateRangeInput extends Component {
       value: PropTypes.object
     })),
     defaultValue: PropTypes.object,
+    ignoreDefault: PropTypes.bool,
     alwaysShowCalendar: PropTypes.bool,
+    singleCalendarBreakpoint: PropTypes.number,
     maximumDate: PropTypes.instanceOf(Date),
     minimumDate: PropTypes.instanceOf(Date),
     defaultDisplayValue: PropTypes.string,
@@ -86,7 +102,9 @@ class DateRangeInput extends Component {
   static defaultProps = {
     onDateSelected: () => {},
     defaultValue: defaultRanges[2].value,
+    ignoreDefault: false,
     alwaysShowCalendar: true,
+    singleCalendarBreakpoint: 979,
     ranges: defaultRanges,
     defaultDisplayValue: 'Select a date range',
     selectSingleDay: true,
@@ -107,7 +125,9 @@ class DateRangeInput extends Component {
   }
 
   addMediaMatch = () => {
-    this.mediaQuery = window.matchMedia('only screen and (max-width: 979px)');
+    let breakpoint = this.props.singleCalendarBreakpoint;
+    let media = 'only screen and (max-width: ' + breakpoint + 'px)';
+    this.mediaQuery = window.matchMedia(media);
     this.mediaQuery.addListener(this.observeMediaQuery);
 
     this.observeMediaQuery();
