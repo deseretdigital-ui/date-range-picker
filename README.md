@@ -1,6 +1,6 @@
 # Date Range Input
 
-This is a wrapper around https://github.com/airbnb/react-dates v13.0.4
+This is a wrapper around https://github.com/airbnb/react-dates v12.7.0
 
 This is the barebones version of the library. Currently, it's setup so you'll need to use ES6 imports to bring in the library and then compile it with WebPack.
 
