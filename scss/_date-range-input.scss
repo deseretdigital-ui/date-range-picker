@@ -79,7 +79,6 @@
   &--calendar-open {
     @include respond-to(wide-screens) {
       top: 52px;
-      width: 575px;
     }
   }
 }
