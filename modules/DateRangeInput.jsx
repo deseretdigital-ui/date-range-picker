@@ -325,8 +325,12 @@ class DateRangeInput extends Component {
       minimumNights: 0,
       initialVisibleMonth: () => {
         let month = moment();
+        if (this.state.value && this.state.value.start instanceof moment) {
+          // Clone the start date
+          month = moment(this.state.value.start);
+        }
         if (this.state.numCalendars > 1) {
-          month = moment().subtract(1, 'months');
+          month = month.subtract(1, 'months');
         }
         return month;
       }
