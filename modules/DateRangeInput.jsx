@@ -329,7 +329,8 @@ class DateRangeInput extends Component {
           // Clone the start date
           month = moment(this.state.value.start);
         }
-        if (this.state.numCalendars > 1) {
+        // Render one month before the start date if there are custom ranges
+        if (this.state.numCalendars > 1 && this.props.ranges.length) {
           month = month.subtract(1, 'months');
         }
         return month;
