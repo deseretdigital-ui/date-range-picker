@@ -38356,7 +38356,7 @@ _reactDom2.default.render(_react2.default.createElement(_index2.default, {
   minimumDate: lastMonth,
   maximumDate: nextMonth,
   ranges: [],
-  ignoreDefault: true,
+  defaultValue: null,
   singleCalendarBreakpoint: 1260
 }), document.getElementById('dateRangeExampleNoRangesBlockedDates'));
 
@@ -38461,7 +38461,7 @@ var DateRangeInput = function (_Component) {
     var startDate = null;
     var endDate = null;
 
-    if (!props.ignoreDefault && props.defaultValue && props.defaultValue.start && props.defaultValue.end) {
+    if (props.defaultValue && props.defaultValue.start && props.defaultValue.end) {
       value = props.defaultValue;
       startDate = props.defaultValue.start;
       endDate = props.defaultValue.end;
@@ -38533,7 +38533,6 @@ DateRangeInput.propTypes = {
     value: _propTypes2.default.object
   })),
   defaultValue: _propTypes2.default.object,
-  ignoreDefault: _propTypes2.default.bool,
   alwaysShowCalendar: _propTypes2.default.bool,
   singleCalendarBreakpoint: _propTypes2.default.number,
   maximumDate: _propTypes2.default.instanceOf(Date),
@@ -38546,7 +38545,6 @@ DateRangeInput.propTypes = {
 DateRangeInput.defaultProps = {
   onDateSelected: function onDateSelected() {},
   defaultValue: defaultRanges[2].value,
-  ignoreDefault: false,
   alwaysShowCalendar: true,
   singleCalendarBreakpoint: 979,
   ranges: defaultRanges,
@@ -38602,7 +38600,7 @@ var _initialiseProps = function _initialiseProps() {
   this.hasValidDate = function () {
     var isValid = false;
 
-    if (_this3.state.value && _this3.state.value.start instanceof _moment2.default && _this3.state.value.start instanceof _moment2.default) {
+    if (_this3.state.value && _this3.state.value.start instanceof _moment2.default && _this3.state.value.end instanceof _moment2.default) {
       isValid = true;
     }
 
@@ -38698,11 +38696,19 @@ var _initialiseProps = function _initialiseProps() {
   };
 
   this.clearSelectedRange = function () {
-    _this3.setState({
+    var clearValue = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
+
+    var newState = {
       startDate: null,
       endDate: null,
       focusedInput: 'startDate'
-    });
+    };
+
+    if (clearValue) {
+      newState.value = null;
+    }
+
+    _this3.setState(newState);
   };
 
   this.handleIsOutsideRange = function (day) {

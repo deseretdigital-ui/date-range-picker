@@ -28,7 +28,7 @@ ReactDom.render(
     minimumDate={lastMonth}
     maximumDate={nextMonth}
     ranges={[]}
-    ignoreDefault={true}
+    defaultValue={null}
     singleCalendarBreakpoint={1260}
   />,
   document.getElementById('dateRangeExampleNoRangesBlockedDates')

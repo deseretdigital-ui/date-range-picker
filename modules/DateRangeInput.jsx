@@ -60,8 +60,7 @@ class DateRangeInput extends Component {
     let startDate = null;
     let endDate = null;
 
-    if (!props.ignoreDefault
-      && props.defaultValue
+    if (props.defaultValue
       && props.defaultValue.start
       && props.defaultValue.end
     ) {
@@ -88,7 +87,6 @@ class DateRangeInput extends Component {
       value: PropTypes.object
     })),
     defaultValue: PropTypes.object,
-    ignoreDefault: PropTypes.bool,
     alwaysShowCalendar: PropTypes.bool,
     singleCalendarBreakpoint: PropTypes.number,
     maximumDate: PropTypes.instanceOf(Date),
@@ -102,7 +100,6 @@ class DateRangeInput extends Component {
   static defaultProps = {
     onDateSelected: () => {},
     defaultValue: defaultRanges[2].value,
-    ignoreDefault: false,
     alwaysShowCalendar: true,
     singleCalendarBreakpoint: 979,
     ranges: defaultRanges,
@@ -164,18 +161,18 @@ class DateRangeInput extends Component {
     }
   };
 
-  hasValidDate= () => {
+  hasValidDate = () => {
     let isValid = false;
 
     if (this.state.value
       && this.state.value.start instanceof moment
-      && this.state.value.start instanceof moment
+      && this.state.value.end instanceof moment
     ) {
       isValid = true;
     }
 
     return isValid;
-  }
+  };
 
   getDisplayValue = () => {
     let displayValue = this.props.defaultDisplayValue;
@@ -272,12 +269,18 @@ class DateRangeInput extends Component {
     });
   };
 
-  clearSelectedRange = () => {
-    this.setState({
+  clearSelectedRange = (clearValue = false) => {
+    let newState = {
       startDate: null,
       endDate: null,
       focusedInput: 'startDate'
-    });
+    };
+
+    if (clearValue) {
+      newState.value = null;
+    }
+
+    this.setState(newState);
   };
 
   handleIsOutsideRange = (day) => {
