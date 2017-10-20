@@ -5122,7 +5122,7 @@ module.exports = shouldUseNative() ? Object.assign : function (target, source) {
 
 var _prodInvariant = __webpack_require__(5);
 
-var DOMProperty = __webpack_require__(25);
+var DOMProperty = __webpack_require__(24);
 var ReactDOMComponentFlags = __webpack_require__(247);
 
 var invariant = __webpack_require__(2);
@@ -6759,56 +6759,6 @@ function getPooledWarningPropertyDefinition(propName, getVal) {
 /* 24 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var moment = __webpack_require__(0);
-var momentValidationWrapper = __webpack_require__(449);
-var core = __webpack_require__(450);
-
-moment.createFromInputFallback = function(config) {
-  config._d = new Date(config._i);
-};
-
-module.exports = {
-
-  momentObj : core.createMomentChecker(
-    'object',
-    function(obj) {
-      return typeof obj === 'object';
-    },
-    function isValid(value) {
-      return momentValidationWrapper.isValidMoment(value);
-    },
-    'Moment'
-  ),
-
-  momentString : core.createMomentChecker(
-    'string',
-    function(str) {
-      return typeof str === 'string';
-    },
-    function isValid(value) {
-      return momentValidationWrapper.isValidMoment(moment(value));
-    },
-    'Moment'
-  ),
-
-  momentDurationObj : core.createMomentChecker(
-    'object',
-    function(obj) {
-      return typeof obj === 'object';
-    },
-    function isValid(value) {
-      return moment.isDuration(value);
-    },
-    'Duration'
-  ),
-
-};
-
-
-/***/ }),
-/* 25 */
-/***/ (function(module, exports, __webpack_require__) {
-
 "use strict";
 /* WEBPACK VAR INJECTION */(function(process) {/**
  * Copyright 2013-present, Facebook, Inc.
@@ -7019,6 +6969,56 @@ var DOMProperty = {
 
 module.exports = DOMProperty;
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1)))
+
+/***/ }),
+/* 25 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var moment = __webpack_require__(0);
+var momentValidationWrapper = __webpack_require__(449);
+var core = __webpack_require__(450);
+
+moment.createFromInputFallback = function(config) {
+  config._d = new Date(config._i);
+};
+
+module.exports = {
+
+  momentObj : core.createMomentChecker(
+    'object',
+    function(obj) {
+      return typeof obj === 'object';
+    },
+    function isValid(value) {
+      return momentValidationWrapper.isValidMoment(value);
+    },
+    'Moment'
+  ),
+
+  momentString : core.createMomentChecker(
+    'string',
+    function(str) {
+      return typeof str === 'string';
+    },
+    function isValid(value) {
+      return momentValidationWrapper.isValidMoment(moment(value));
+    },
+    'Moment'
+  ),
+
+  momentDurationObj : core.createMomentChecker(
+    'object',
+    function(obj) {
+      return typeof obj === 'object';
+    },
+    function isValid(value) {
+      return moment.isDuration(value);
+    },
+    'Duration'
+  ),
+
+};
+
 
 /***/ }),
 /* 26 */
@@ -29006,7 +29006,7 @@ module.exports = CSSProperty;
 
 
 
-var DOMProperty = __webpack_require__(25);
+var DOMProperty = __webpack_require__(24);
 var ReactDOMComponentTree = __webpack_require__(10);
 var ReactInstrumentation = __webpack_require__(19);
 
@@ -30240,7 +30240,7 @@ module.exports = g;
 var _prodInvariant = __webpack_require__(5);
 
 var DOMLazyTree = __webpack_require__(36);
-var DOMProperty = __webpack_require__(25);
+var DOMProperty = __webpack_require__(24);
 var React = __webpack_require__(30);
 var ReactBrowserEventEmitter = __webpack_require__(63);
 var ReactCurrentOwner = __webpack_require__(20);
@@ -31040,7 +31040,7 @@ var _propTypes = __webpack_require__(4);
 
 var _propTypes2 = _interopRequireDefault(_propTypes);
 
-var _reactMomentProptypes = __webpack_require__(24);
+var _reactMomentProptypes = __webpack_require__(25);
 
 var _reactMomentProptypes2 = _interopRequireDefault(_reactMomentProptypes);
 
@@ -31290,7 +31290,7 @@ module.exports = __webpack_require__(12);
 /***/ 10:
 /***/ (function(module, exports) {
 
-module.exports = __webpack_require__(24);
+module.exports = __webpack_require__(25);
 
 /***/ }),
 
@@ -33314,7 +33314,7 @@ module.exports = __webpack_require__(34);
 /* 10 */
 /***/ (function(module, exports) {
 
-module.exports = __webpack_require__(24);
+module.exports = __webpack_require__(25);
 
 /***/ }),
 /* 11 */,
@@ -34975,7 +34975,7 @@ module.exports = __webpack_require__(40);
 /* 10 */
 /***/ (function(module, exports) {
 
-module.exports = __webpack_require__(24);
+module.exports = __webpack_require__(25);
 
 /***/ }),
 /* 11 */,
@@ -35572,7 +35572,7 @@ module.exports = __webpack_require__(12);
 /***/ 10:
 /***/ (function(module, exports) {
 
-module.exports = __webpack_require__(24);
+module.exports = __webpack_require__(25);
 
 /***/ }),
 
@@ -36023,7 +36023,7 @@ module.exports = __webpack_require__(12);
 /***/ 10:
 /***/ (function(module, exports) {
 
-module.exports = __webpack_require__(24);
+module.exports = __webpack_require__(25);
 
 /***/ }),
 
@@ -36485,7 +36485,7 @@ var _propTypes = __webpack_require__(4);
 
 var _propTypes2 = _interopRequireDefault(_propTypes);
 
-var _reactMomentProptypes = __webpack_require__(24);
+var _reactMomentProptypes = __webpack_require__(25);
 
 var _reactMomentProptypes2 = _interopRequireDefault(_reactMomentProptypes);
 
@@ -36712,7 +36712,7 @@ module.exports = __webpack_require__(34);
 /* 10 */
 /***/ (function(module, exports) {
 
-module.exports = __webpack_require__(24);
+module.exports = __webpack_require__(25);
 
 /***/ }),
 /* 11 */,
@@ -38821,10 +38821,6 @@ var _propTypes2 = _interopRequireDefault(_propTypes);
 
 var _reactDates = __webpack_require__(317);
 
-var _reactMomentProptypes = __webpack_require__(24);
-
-var _reactMomentProptypes2 = _interopRequireDefault(_reactMomentProptypes);
-
 var _moment = __webpack_require__(0);
 
 var _moment2 = _interopRequireDefault(_moment);
@@ -38864,6 +38860,14 @@ var defaultRanges = [{
   'label': 'Last Month',
   'value': _moment2.default.range((0, _moment2.default)().subtract(1, 'month').startOf('month').startOf('day'), (0, _moment2.default)().subtract(1, 'month').endOf('month').startOf('day'))
 }];
+
+var momentRangeProp = function momentRangeProp(props, propName, componentName) {
+  var propValue = props[propName];
+
+  if (propValue !== null && propValue.constructor.name !== 'DateRange') {
+    return new Error('Invalid prop `' + propName + '` supplied to' + ' `' + componentName + '`. Must be of type `DateRange`.' + ' Validation failed.');
+  }
+};
 
 var DateRangeInput = function (_Component) {
   _inherits(DateRangeInput, _Component);
@@ -38950,9 +38954,9 @@ DateRangeInput.propTypes = {
   onDateSelected: _propTypes2.default.func,
   ranges: _propTypes2.default.arrayOf(_propTypes2.default.shape({
     label: _propTypes2.default.string,
-    value: _reactMomentProptypes2.default.momentObj
+    value: momentRangeProp
   })),
-  defaultValue: _reactMomentProptypes2.default.momentObj,
+  defaultValue: momentRangeProp,
   alwaysShowCalendar: _propTypes2.default.bool,
   singleCalendarBreakpoint: _propTypes2.default.number,
   maximumDate: _propTypes2.default.instanceOf(Date),
@@ -47170,7 +47174,7 @@ module.exports = EnterLeaveEventPlugin;
 
 
 
-var DOMProperty = __webpack_require__(25);
+var DOMProperty = __webpack_require__(24);
 
 var MUST_USE_PROPERTY = DOMProperty.injection.MUST_USE_PROPERTY;
 var HAS_BOOLEAN_VALUE = DOMProperty.injection.HAS_BOOLEAN_VALUE;
@@ -47867,7 +47871,7 @@ var AutoFocusUtils = __webpack_require__(389);
 var CSSPropertyOperations = __webpack_require__(390);
 var DOMLazyTree = __webpack_require__(36);
 var DOMNamespaces = __webpack_require__(79);
-var DOMProperty = __webpack_require__(25);
+var DOMProperty = __webpack_require__(24);
 var DOMPropertyOperations = __webpack_require__(259);
 var EventPluginHub = __webpack_require__(46);
 var EventPluginRegistry = __webpack_require__(58);
@@ -52882,7 +52886,7 @@ module.exports = getUnboundedScrollPosition;
 
 
 
-var DOMProperty = __webpack_require__(25);
+var DOMProperty = __webpack_require__(24);
 var EventPluginHub = __webpack_require__(46);
 var EventPluginUtils = __webpack_require__(73);
 var ReactComponentEnvironment = __webpack_require__(82);
@@ -55036,7 +55040,7 @@ module.exports = ReactMount.renderSubtreeIntoContainer;
 
 
 
-var DOMProperty = __webpack_require__(25);
+var DOMProperty = __webpack_require__(24);
 var EventPluginRegistry = __webpack_require__(58);
 var ReactComponentTreeHook = __webpack_require__(14);
 
@@ -55203,7 +55207,7 @@ module.exports = ReactDOMNullInputValuePropHook;
 
 
 
-var DOMProperty = __webpack_require__(25);
+var DOMProperty = __webpack_require__(24);
 var ReactComponentTreeHook = __webpack_require__(14);
 
 var warning = __webpack_require__(3);
