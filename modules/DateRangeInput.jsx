@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import {DayPickerRangeController} from 'react-dates';
+import momentProptypes from 'react-moment-proptypes';
 import moment from 'moment';
 import {} from 'moment-range';
 import classnames from 'classnames';
@@ -84,9 +85,9 @@ class DateRangeInput extends Component {
     onDateSelected: PropTypes.func,
     ranges: PropTypes.arrayOf(PropTypes.shape({
       label: PropTypes.string,
-      value: PropTypes.object
+      value: momentProptypes.momentObj
     })),
-    defaultValue: PropTypes.object,
+    defaultValue: momentProptypes.momentObj,
     alwaysShowCalendar: PropTypes.bool,
     singleCalendarBreakpoint: PropTypes.number,
     maximumDate: PropTypes.instanceOf(Date),
@@ -99,7 +100,7 @@ class DateRangeInput extends Component {
 
   static defaultProps = {
     onDateSelected: () => {},
-    defaultValue: defaultRanges[2].value,
+    defaultValue: null,
     alwaysShowCalendar: true,
     singleCalendarBreakpoint: 979,
     ranges: defaultRanges,
