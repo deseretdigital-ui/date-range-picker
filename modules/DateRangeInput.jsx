@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import {DayPickerRangeController} from 'react-dates';
+import momentProptypes from 'react-moment-proptypes';
 import moment from 'moment';
 import {} from 'moment-range';
 import classnames from 'classnames';
@@ -60,8 +61,7 @@ class DateRangeInput extends Component {
     let startDate = null;
     let endDate = null;
 
-    if (!props.ignoreDefault
-      && props.defaultValue
+    if (props.defaultValue
       && props.defaultValue.start
       && props.defaultValue.end
     ) {
@@ -85,10 +85,9 @@ class DateRangeInput extends Component {
     onDateSelected: PropTypes.func,
     ranges: PropTypes.arrayOf(PropTypes.shape({
       label: PropTypes.string,
-      value: PropTypes.object
+      value: momentProptypes.momentObj
     })),
-    defaultValue: PropTypes.object,
-    ignoreDefault: PropTypes.bool,
+    defaultValue: momentProptypes.momentObj,
     alwaysShowCalendar: PropTypes.bool,
     singleCalendarBreakpoint: PropTypes.number,
     maximumDate: PropTypes.instanceOf(Date),
@@ -101,8 +100,7 @@ class DateRangeInput extends Component {
 
   static defaultProps = {
     onDateSelected: () => {},
-    defaultValue: defaultRanges[2].value,
-    ignoreDefault: false,
+    defaultValue: null,
     alwaysShowCalendar: true,
     singleCalendarBreakpoint: 979,
     ranges: defaultRanges,
@@ -164,18 +162,18 @@ class DateRangeInput extends Component {
     }
   };
 
-  hasValidDate= () => {
+  hasValidDate = () => {
     let isValid = false;
 
     if (this.state.value
       && this.state.value.start instanceof moment
-      && this.state.value.start instanceof moment
+      && this.state.value.end instanceof moment
     ) {
       isValid = true;
     }
 
     return isValid;
-  }
+  };
 
   getDisplayValue = () => {
     let displayValue = this.props.defaultDisplayValue;
@@ -272,12 +270,18 @@ class DateRangeInput extends Component {
     });
   };
 
-  clearSelectedRange = () => {
-    this.setState({
+  clearSelectedRange = (clearValue = false) => {
+    let newState = {
       startDate: null,
       endDate: null,
       focusedInput: 'startDate'
-    });
+    };
+
+    if (clearValue) {
+      newState.value = null;
+    }
+
+    this.setState(newState);
   };
 
   handleIsOutsideRange = (day) => {

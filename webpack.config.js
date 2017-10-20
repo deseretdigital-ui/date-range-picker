@@ -3,8 +3,8 @@ var path = require('path');
 
 module.exports = {
   entry: path.resolve(
-      __dirname,
-      'example/example.jsx'
+    __dirname,
+    'example/example.jsx'
   ),
   output: {
     filename: 'example/example.js'
