@@ -214,17 +214,6 @@ class DateRangeInput extends Component {
   handleDateChange = (date) => {
     let range;
 
-    // When picking new start date and we already have
-    // an end date, let's clear the end date and
-    // allow picking a new one. Otherwise, the
-    // calendar will close before we have a chance to
-    // select a new end date.
-    if (this.state.startDate instanceof moment
-      && date.startDate.isBefore(this.state.startDate)
-    ) {
-      date.endDate = null;
-    }
-
     if (date.startDate && date.endDate) {
       range = moment.range(
         date.startDate.startOf('day'),
@@ -239,7 +228,11 @@ class DateRangeInput extends Component {
       });
 
       this.props.onDateSelected(range);
-      this.closeDropdownOnTimeout();
+
+      // Close the calendar after selecting the end date
+      if (this.state.focusedInput == 'endDate') {
+        this.closeDropdownOnTimeout();
+      }
     } else if (date.startDate) {
       this.setState({
         startDate: date.startDate,
