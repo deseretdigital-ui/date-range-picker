@@ -2,9 +2,8 @@ import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import {DayPickerRangeController} from 'react-dates';
 import classnames from 'classnames';
-
-import Moment from 'moment'
-import { extendMoment } from 'moment-range'
+import Moment from 'moment';
+import {extendMoment} from 'moment-range';
 
 const moment = extendMoment(Moment);
 
