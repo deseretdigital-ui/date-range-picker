@@ -1,9 +1,12 @@
 import DateRangeInput from '../lib/index.js';
 import React from 'react';
 import ReactDom from 'react-dom';
-import moment from 'moment';
-import {} from 'moment-range';
 import {} from './styles.scss';
+
+import Moment from 'moment'
+import { extendMoment } from 'moment-range'
+
+const moment = extendMoment(Moment);
 
 let date = new Date();
 let lastMonth = new Date();
