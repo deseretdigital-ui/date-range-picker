@@ -30,8 +30,8 @@
   "dependencies": {
     "airbnb-browser-shims": "^1.11.1",
     "classnames": "^2.2.5",
-    "moment": "^2.10.6",
-    "moment-range": "^2.0.3",
+    "moment": "^2.21.0",
+    "moment-range": "^3.1.1",
     "react-dates": "^12.7.0"
   },
   "devDependencies": {
