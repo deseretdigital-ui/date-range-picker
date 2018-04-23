@@ -52,7 +52,7 @@ const defaultRanges = [
   }
 ];
 
-const momentRangeProp = function(props, propName, componentName) {
+const momentRangeProp = function (props, propName, componentName) {
   const propValue = props[propName];
 
   if (propValue !== null) {
@@ -60,13 +60,14 @@ const momentRangeProp = function(props, propName, componentName) {
       ' `' + componentName + '`. Must be of type `DateRange`.'
       + ' Validation failed.';
 
-    if (!(propValue instanceof DateRange)) {
-      console.log('not instance of', propValue);
-      return new Error(message);
-    } else if (propValue.constructor.name !== 'DateRange') {
-      console.log('not constructor DateRange', propValue);
-      return new Error(message);
+    // Don't return error if the following is true
+    if (propValue instanceof DateRange ||
+      propValue.constructor.name === 'DateRange'
+    ) {
+      return;
     }
+
+    return new Error(message);
   }
 };
 
