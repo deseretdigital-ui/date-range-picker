@@ -3,19 +3,70 @@ import PropTypes from 'prop-types';
 import {DayPickerRangeController} from 'react-dates';
 import classnames from 'classnames';
 import Moment from 'moment';
-import {extendMoment} from 'moment-range';
+import {extendMoment, DateRange} from 'moment-range';
 
 const moment = extendMoment(Moment);
+
+const defaultRanges = [
+  {
+    label: 'Today',
+    value: moment.range(
+      moment().startOf('day'),
+      moment().startOf('day')
+    )
+  },
+  {
+    label: 'Yesterday',
+    value: moment.range(
+      moment().startOf('day').subtract(1, 'days'),
+      moment().startOf('day').subtract(1, 'days')
+    )
+  },
+  {
+    label: 'Last 7 Days',
+    value: moment.range(
+      moment().startOf('day').subtract(6, 'days'),
+      moment().startOf('day')
+    )
+  },
+  {
+    label: 'Last 30 Days',
+    value: moment.range(
+      moment().startOf('day').subtract(29, 'days'),
+      moment().startOf('day')
+    )
+  },
+  {
+    label: 'This Month',
+    value: moment.range(
+      moment().startOf('month').startOf('day'),
+      moment().endOf('month').startOf('day')
+    )
+  },
+  {
+    label: 'Last Month',
+    value: moment.range(
+      moment().subtract(1, 'month').startOf('month').startOf('day'),
+      moment().subtract(1, 'month').endOf('month').startOf('day')
+    )
+  }
+];
 
 const momentRangeProp = function(props, propName, componentName) {
   const propValue = props[propName];
 
-  if (propValue !== null && propValue.constructor.name !== 'DateRange') {
-    return new Error(
-      'Invalid prop `' + propName + '` supplied to' +
+  if (propValue !== null) {
+    const message = 'Invalid prop `' + propName + '` supplied to' +
       ' `' + componentName + '`. Must be of type `DateRange`.'
-      + ' Validation failed.'
-    );
+      + ' Validation failed.';
+
+    if (!(propValue instanceof DateRange)) {
+      console.log('not instance of', propValue);
+      return new Error(message);
+    } else if (propValue.constructor.name !== 'DateRange') {
+      console.log('not constructor DateRange', propValue);
+      return new Error(message);
+    }
   }
 };
 
@@ -71,57 +122,12 @@ class DateRangeInput extends Component {
     defaultValue: null,
     alwaysShowCalendar: true,
     singleCalendarBreakpoint: 979,
-    ranges: DateRangeInput.defaultRanges,
+    ranges: defaultRanges,
     defaultDisplayValue: 'Select a date range',
     selectSingleDay: true,
     wrapperClass: 'DateInputWrapper',
     daySize: 36
   };
-
-  static defaultRanges = [
-    {
-      label: 'Today',
-      value: moment.range(
-        moment().startOf('day'),
-        moment().startOf('day')
-      )
-    },
-    {
-      label: 'Yesterday',
-      value: moment.range(
-        moment().startOf('day').subtract(1, 'days'),
-        moment().startOf('day').subtract(1, 'days')
-      )
-    },
-    {
-      label: 'Last 7 Days',
-      value: moment.range(
-        moment().startOf('day').subtract(6, 'days'),
-        moment().startOf('day')
-      )
-    },
-    {
-      label: 'Last 30 Days',
-      value: moment.range(
-        moment().startOf('day').subtract(29, 'days'),
-        moment().startOf('day')
-      )
-    },
-    {
-      label: 'This Month',
-      value: moment.range(
-        moment().startOf('month').startOf('day'),
-        moment().endOf('month').startOf('day')
-      )
-    },
-    {
-      label: 'Last Month',
-      value: moment.range(
-        moment().subtract(1, 'month').startOf('month').startOf('day'),
-        moment().subtract(1, 'month').endOf('month').startOf('day')
-      )
-    }
-  ];
 
   static getDerivedStateFromProps(newProps, prevState) {
     let newState = null;
