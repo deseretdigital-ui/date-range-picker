@@ -123,22 +123,26 @@ class DateRangeInput extends Component {
     daySize: 36
   };
 
+  static getDerivedStateFromProps(newProps) {
+    let newState = null;
+
+    if (newProps.defaultValue &&
+      !newProps.defaultValue.isSame(this.props.defaultValue)
+    ) {
+      newState = {
+        value: newProps.defaultValue,
+        startDate: newProps.defaultValue.start,
+        endDate: newProps.defaultValue.end
+      };
+    }
+
+    return newState;
+  }
+
   componentDidMount() {
     this.addMediaMatch();
     window.addEventListener('mousedown', this.closeDropdown, false);
     window.addEventListener('touchstart', this.closeDropdown, false);
-  }
-
-  componentWillReceiveProps(newProps) {
-    if (newProps.defaultValue &&
-      !newProps.defaultValue.isSame(this.props.defaultValue)
-    ) {
-      this.setState({
-        value: newProps.defaultValue,
-        startDate: newProps.defaultValue.start,
-        endDate: newProps.defaultValue.end
-      });
-    }
   }
 
   componentWillUnmount() {
