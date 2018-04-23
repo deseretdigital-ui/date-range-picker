@@ -129,6 +129,18 @@ class DateRangeInput extends Component {
     window.addEventListener('touchstart', this.closeDropdown, false);
   }
 
+  componentWillReceiveProps(newProps) {
+    if (newProps.defaultValue &&
+      !newProps.defaultValue.isSame(this.props.defaultValue)
+    ) {
+      this.setState({
+        value: newProps.defaultValue,
+        startDate: newProps.defaultValue.start,
+        endDate: newProps.defaultValue.end
+      });
+    }
+  }
+
   componentWillUnmount() {
     this.mediaQuery.removeListener(this.observeMediaQuery);
     window.removeEventListener('mousedown', this.closeDropdown);

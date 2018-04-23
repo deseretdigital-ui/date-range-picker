@@ -40187,6 +40187,17 @@ var DateRangeInput = function (_Component) {
       window.addEventListener('touchstart', this.closeDropdown, false);
     }
   }, {
+    key: 'componentWillReceiveProps',
+    value: function componentWillReceiveProps(newProps) {
+      if (newProps.defaultValue && !newProps.defaultValue.isSame(this.props.defaultValue)) {
+        this.setState({
+          value: newProps.defaultValue,
+          startDate: newProps.defaultValue.start,
+          endDate: newProps.defaultValue.end
+        });
+      }
+    }
+  }, {
     key: 'componentWillUnmount',
     value: function componentWillUnmount() {
       this.mediaQuery.removeListener(this.observeMediaQuery);
