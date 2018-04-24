@@ -3,64 +3,71 @@ import PropTypes from 'prop-types';
 import {DayPickerRangeController} from 'react-dates';
 import classnames from 'classnames';
 import Moment from 'moment';
-import {extendMoment} from 'moment-range';
+import {extendMoment, DateRange} from 'moment-range';
 
 const moment = extendMoment(Moment);
 
 const defaultRanges = [
   {
-    'label': 'Today',
-    'value': moment.range(
+    label: 'Today',
+    value: moment.range(
       moment().startOf('day'),
       moment().startOf('day')
     )
   },
   {
-    'label': 'Yesterday',
-    'value': moment.range(
+    label: 'Yesterday',
+    value: moment.range(
       moment().startOf('day').subtract(1, 'days'),
       moment().startOf('day').subtract(1, 'days')
     )
   },
   {
-    'label': 'Last 7 Days',
-    'value': moment.range(
+    label: 'Last 7 Days',
+    value: moment.range(
       moment().startOf('day').subtract(6, 'days'),
       moment().startOf('day')
     )
   },
   {
-    'label': 'Last 30 Days',
-    'value': moment.range(
+    label: 'Last 30 Days',
+    value: moment.range(
       moment().startOf('day').subtract(29, 'days'),
       moment().startOf('day')
     )
   },
   {
-    'label': 'This Month',
-    'value': moment.range(
+    label: 'This Month',
+    value: moment.range(
       moment().startOf('month').startOf('day'),
       moment().endOf('month').startOf('day')
     )
   },
   {
-    'label': 'Last Month',
-    'value': moment.range(
+    label: 'Last Month',
+    value: moment.range(
       moment().subtract(1, 'month').startOf('month').startOf('day'),
       moment().subtract(1, 'month').endOf('month').startOf('day')
     )
   }
 ];
 
-const momentRangeProp = function(props, propName, componentName) {
+const momentRangeProp = function (props, propName, componentName) {
   const propValue = props[propName];
 
-  if (propValue !== null && propValue.constructor.name !== 'DateRange') {
-    return new Error(
-      'Invalid prop `' + propName + '` supplied to' +
+  if (propValue !== null) {
+    const message = 'Invalid prop `' + propName + '` supplied to' +
       ' `' + componentName + '`. Must be of type `DateRange`.'
-      + ' Validation failed.'
-    );
+      + ' Validation failed.';
+
+    // Don't return error if the following is true
+    if (propValue instanceof DateRange ||
+      propValue.constructor.name === 'DateRange'
+    ) {
+      return;
+    }
+
+    return new Error(message);
   }
 };
 
@@ -123,11 +130,11 @@ class DateRangeInput extends Component {
     daySize: 36
   };
 
-  static getDerivedStateFromProps(newProps) {
+  static getDerivedStateFromProps(newProps, prevState) {
     let newState = null;
 
     if (newProps.defaultValue &&
-      !newProps.defaultValue.isSame(this.props.defaultValue)
+      !newProps.defaultValue.isSame(prevState.value)
     ) {
       newState = {
         value: newProps.defaultValue,
