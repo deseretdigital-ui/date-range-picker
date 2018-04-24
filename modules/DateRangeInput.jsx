@@ -202,8 +202,8 @@ class DateRangeInput extends Component {
     let isValid = false;
 
     if (this.state.value
-      && this.state.value.start instanceof moment
-      && this.state.value.end instanceof moment
+      && this.state.value.start.constructor.name === 'Moment'
+      && this.state.value.end.constructor.name === 'Moment'
     ) {
       isValid = true;
     }
@@ -378,14 +378,17 @@ class DateRangeInput extends Component {
       minimumNights: 0,
       initialVisibleMonth: () => {
         let month = moment();
-        if (this.state.value && this.state.value.start instanceof moment) {
+
+        if (this.hasValidDate()) {
           // Clone the start date
           month = moment(this.state.value.start);
         }
+
         // Render one month before the start date if there are custom ranges
         if (this.state.numCalendars > 1 && this.props.ranges.length) {
           month = month.subtract(1, 'months');
         }
+
         return month;
       }
     };
