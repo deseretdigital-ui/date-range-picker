@@ -9,7 +9,8 @@ module.exports = {
     'example/example.jsx'
   ),
   output: {
-    filename: 'example/example.js'
+    path: path.resolve(__dirname, 'example'),
+    filename: 'example.js'
   },
   module: {
     rules: [

@@ -201,11 +201,14 @@ class DateRangeInput extends Component {
   hasValidDate = () => {
     let isValid = false;
 
-    if (this.state.value
-      && this.state.value.start.constructor.name === 'Moment'
-      && this.state.value.end.constructor.name === 'Moment'
-    ) {
-      isValid = true;
+    if (this.state.value) {
+      try {
+        this.state.value.start.format('DD MMM YYYY');
+        this.state.value.end.format('DD MMM YYYY');
+        isValid = true;
+      } catch (error) {
+        // Do nothing
+      }
     }
 
     return isValid;
@@ -215,7 +218,7 @@ class DateRangeInput extends Component {
     let displayValue = this.props.defaultDisplayValue;
 
     if (this.hasValidDate()) {
-      let displayFormat = 'DD MMM YYYY'
+      let displayFormat = 'DD MMM YYYY';
       displayValue = this.state.value.start.format(displayFormat)
         + ' - '
         + this.state.value.end.format(displayFormat);
