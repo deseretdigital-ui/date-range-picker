@@ -77,7 +77,7 @@ class DateRangeInput extends Component {
 
     this.mediaQuery = null;
 
-    let value = moment.range();
+    let value = null;
     let startDate = null;
     let endDate = null;
 
@@ -296,9 +296,11 @@ class DateRangeInput extends Component {
       return;
     }
 
+    const {value} = this.state;
+
     this.setState({
-      startDate: this.state.value.start,
-      endDate: this.state.value.end
+      startDate: value ? value.start : null,
+      endDate: value ? value.end : null
     });
   };
 
@@ -310,7 +312,7 @@ class DateRangeInput extends Component {
     };
 
     if (clearValue) {
-      newState.value = moment.range();
+      newState.value = null;
     }
 
     this.setState(newState);
@@ -357,7 +359,7 @@ class DateRangeInput extends Component {
 
     let isCustom = true;
     this.props.ranges.forEach((range) => {
-      if (this.state.value.isSame(range.value)) {
+      if (this.state.value && this.state.value.isSame(range.value)) {
         isCustom = false;
       }
     });
@@ -448,8 +450,10 @@ class DateRangeInput extends Component {
           <li>
             <button
               type="button"
-              onMouseEnter={this.handleShowCustomRange}
-              onMouseLeave={this.handleHideCustomRange}
+              onMouseEnter={
+                this.handleHighlightRange.bind(null, {start: null, end: null})
+              }
+              onMouseLeave={this.handleUnhighlightRange}
               className={classnames(customRangeClasses)}
               onClick={this.clearSelectedRange}
             >
@@ -468,8 +472,7 @@ class DateRangeInput extends Component {
       var classes = {
         'dateRangeInput__rangeButton': true,
         'dateRangeInput__rangeButton--active':
-          this.hasValidDate()
-            && this.state.value.isSame(range.value)
+          this.hasValidDate() && this.state.value.isSame(range.value)
       };
 
       if (this.state.calendarOpen) {
