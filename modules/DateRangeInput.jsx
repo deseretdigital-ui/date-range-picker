@@ -77,7 +77,7 @@ class DateRangeInput extends Component {
 
     this.mediaQuery = null;
 
-    let value = null;
+    let value = moment.range();
     let startDate = null;
     let endDate = null;
 
@@ -120,7 +120,7 @@ class DateRangeInput extends Component {
 
   static defaultProps = {
     onDateSelected: () => {},
-    defaultValue: null,
+    defaultValue: moment.range(),
     alwaysShowCalendar: true,
     singleCalendarBreakpoint: 979,
     ranges: defaultRanges,
@@ -310,7 +310,7 @@ class DateRangeInput extends Component {
     };
 
     if (clearValue) {
-      newState.value = null;
+      newState.value = moment.range();
     }
 
     this.setState(newState);
