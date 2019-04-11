@@ -1,3 +1,4 @@
+import 'react-dates/initialize';
 import DateRangeInput from '../lib/index.js';
 import React from 'react';
 import ReactDom from 'react-dom';
@@ -21,7 +22,7 @@ ReactDom.render(
   <DateRangeInput
     defaultValue={
       moment.range(
-        moment().startOf('day').subtract(6, 'days'),
+        moment().startOf('day').subtract(30, 'days'),
         moment().startOf('day')
       )
     }

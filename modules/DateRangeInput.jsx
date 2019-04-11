@@ -383,14 +383,20 @@ class DateRangeInput extends Component {
       minimumNights: 0,
       initialVisibleMonth: () => {
         let month = moment();
+        let endDate = null;
 
         if (this.hasValidDate()) {
           // Clone the start date
           month = moment(this.state.value.start);
+          endDate = this.state.value.end;
         }
 
         // Render one month before the start date if there are custom ranges
-        if (this.state.numCalendars > 1 && this.props.ranges.length) {
+        // only render one month before if end ate and start date are in the
+        // same month
+        if (this.state.numCalendars > 1 && this.props.ranges.length &&
+          (endDate === null || endDate.month() === month.month())
+        ) {
           month = month.subtract(1, 'months');
         }
 

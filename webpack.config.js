@@ -16,9 +16,8 @@ module.exports = {
     rules: [
       {
         test: /\.jsx$/,
-        loader: 'babel-loader',
-        options: {
-          presets: ['react', 'es2015']
+        use: {
+          loader: 'babel-loader'
         }
       },
       {
@@ -31,7 +30,9 @@ module.exports = {
       },
       {
         test: /\.png$/,
-        loader: 'url-loader'
+        use: {
+          loader: 'url-loader'
+        }
       }
     ]
   },
