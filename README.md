@@ -10,17 +10,17 @@ This library uses window.matchMedia to control whether to show the one or two ca
 
 # Props
 
-* onDateSelected - Function to call when date range is selected.
-* ranges - Predefined ranges for the user to select. Defaults to [today, yesterday, last 7 days, last 30 days, this month, last month].
-* defaultValue - A moment range object with the default range you want selected. Defaults to `this.props.ranges[2]` (i.e. last 7 days).
-* alwaysShowCalendar - Controls whether the calendar always shows or only for custom ranges. Defaults to true.
-* minimumDate - The minimum date you want the user to be able to select.
-* maximumDate - The maximum date you want the user to be able to select.
-* defaultDisplayValue - The value that is displayed when no dates have been selected yet. Defaults to "Select a date range"
-* selectSingleDay - Deprecated to always allowing picking a single date
-* wrapperClass - Allows you to pass in a string to add additional classes to the wrapper
-* daySize - This controls the size of the calendar days
-* singleCalendarBreakpoint - Max screen width where the calendar switches from displaying two calendars to show only one. Defaults to 979.
+- onDateSelected - Function to call when date range is selected.
+- ranges - Predefined ranges for the user to select. Defaults to [today, yesterday, last 7 days, last 30 days, this month, last month].
+- defaultValue - A moment range object with the default range you want selected. Defaults to `this.props.ranges[2]` (i.e. last 7 days).
+- alwaysShowCalendar - Controls whether the calendar always shows or only for custom ranges. Defaults to true.
+- minimumDate - The minimum date you want the user to be able to select.
+- maximumDate - The maximum date you want the user to be able to select.
+- defaultDisplayValue - The value that is displayed when no dates have been selected yet. Defaults to "Select a date range"
+- selectSingleDay - Deprecated to always allowing picking a single date
+- wrapperClass - Allows you to pass in a string to add additional classes to the wrapper
+- daySize - This controls the size of the calendar days
+- singleCalendarBreakpoint - Max screen width where the calendar switches from displaying two calendars to show only one. Defaults to 979.
 
 # Styles
 

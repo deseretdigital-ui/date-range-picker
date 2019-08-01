@@ -1,10 +1,10 @@
-import 'react-dates/initialize';
-import DateRangeInput from '../lib/index.js';
+import 'react-hot-loader';
 import React from 'react';
 import ReactDom from 'react-dom';
+import DateRangeInput from '../src/DateRangeInput';
 import {} from './styles.scss';
 import Moment from 'moment';
-import {extendMoment} from 'moment-range';
+import { extendMoment } from 'moment-range';
 
 const moment = extendMoment(Moment);
 
@@ -20,12 +20,12 @@ nextMonth.setDate(16);
 
 ReactDom.render(
   <DateRangeInput
-    defaultValue={
-      moment.range(
-        moment().startOf('day').subtract(30, 'days'),
-        moment().startOf('day')
-      )
-    }
+    defaultValue={moment.range(
+      moment()
+        .startOf('day')
+        .subtract(30, 'days'),
+      moment().startOf('day')
+    )}
   />,
   document.getElementById('dateRangeExample')
 );
@@ -33,12 +33,12 @@ ReactDom.render(
 ReactDom.render(
   <DateRangeInput
     ranges={[]}
-    defaultValue={
-      moment.range(
-        moment().startOf('day').subtract(6, 'days'),
-        moment().startOf('day')
-      )
-    }
+    defaultValue={moment.range(
+      moment()
+        .startOf('day')
+        .subtract(6, 'days'),
+      moment().startOf('day')
+    )}
   />,
   document.getElementById('dateRangeExampleNoRanges')
 );
