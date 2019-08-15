@@ -1,5 +1,6 @@
 import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
+import { START_DATE } from 'react-dates/constants';
 import isValidDate from './Utils/isValidDate';
 import CalendarContext from './Utils/CalendarContext';
 import { UPDATE_STATE_VALUE } from './Utils/reducer';
@@ -24,29 +25,17 @@ const InputButton = props => {
   };
 
   const toggleDropdown = () => {
-    let dropdownOpenNew = !dropdownOpen;
-    // let focusedInput = dropdownOpenNew ? null : 'startDate';
-    let focusedInput = 'startDate';
-
     dispatch({
       type: UPDATE_STATE_VALUE,
       name: 'dropdownOpen',
-      value: dropdownOpenNew,
+      value: !dropdownOpen,
     });
 
     dispatch({
       type: UPDATE_STATE_VALUE,
       name: 'focusedInput',
-      value: focusedInput,
+      value: START_DATE,
     });
-
-    // if (dropdownOpenNew && props.ranges.length === 0) {
-    //   dispatch({
-    //     type: UPDATE_STATE_VALUE,
-    //     name: 'focusedInput',
-    //     value: 'startDate',
-    //   });
-    // }
   };
 
   /* eslint-disable max-len */

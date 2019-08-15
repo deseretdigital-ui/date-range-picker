@@ -1,14 +1,9 @@
 /* global module:readonly */
 import { hot } from 'react-hot-loader';
-import React, {
-  useState,
-  useEffect,
-  useCallback,
-  useRef,
-  useReducer,
-} from 'react';
+import React, { useEffect, useCallback, useRef, useReducer } from 'react';
 import PropTypes from 'prop-types';
 import 'react-dates/initialize';
+import { START_DATE } from 'react-dates/constants';
 import classnames from 'classnames';
 import CalendarDropdown from './CalendarDropdown';
 import InputButton from './InputButton';
@@ -47,7 +42,7 @@ const defaultRanges = [
     value: moment.range(
       moment()
         .startOf('day')
-        .subtract(29, 'days'),
+        .subtract(30, 'days'),
       moment().startOf('day')
     ),
   },
@@ -77,44 +72,14 @@ const defaultRanges = [
   },
 ];
 
-// Sets up the media query functionality
-const useMediaQuery = (dispatch, singleCalendarBreakpoint) => {
-  const [mediaQuery, setMediaQuery] = useState(null);
-
-  useEffect(() => {
-    let breakpoint = singleCalendarBreakpoint;
-    let media = 'only screen and (max-width: ' + breakpoint + 'px)';
-    const newMediaQuery = window.matchMedia(media);
-    const observeMediaQuery = () => {
-      let matches = mediaQuery ? mediaQuery.matches : newMediaQuery.matches;
-      let numCalendars = matches ? 1 : 2;
-
-      dispatch({
-        type: UPDATE_STATE_VALUE,
-        name: 'numCalendars',
-        value: numCalendars,
-      });
-    };
-
-    newMediaQuery.addListener(observeMediaQuery);
-    setMediaQuery(newMediaQuery);
-
-    observeMediaQuery();
-
-    return () => {
-      newMediaQuery.removeListener(observeMediaQuery);
-    };
-  }, [dispatch, singleCalendarBreakpoint, mediaQuery, setMediaQuery]);
-
-  return mediaQuery;
-};
-
 const DateRangeInput = props => {
   let wrapperClasses = classnames({
     dateRangeInput: true,
     [props.wrapperClass]: true,
   });
+
   const dateRangeInputWrapperRef = useRef(null);
+
   const getInitialCurrentValue = () => {
     let newValue = props.value;
 
@@ -124,6 +89,7 @@ const DateRangeInput = props => {
 
     return newValue;
   };
+
   const getInitialStartDate = () => {
     let startDate = null;
 
@@ -133,6 +99,7 @@ const DateRangeInput = props => {
 
     return startDate;
   };
+
   const getInitialEndDate = () => {
     let endDate = null;
 
@@ -142,11 +109,13 @@ const DateRangeInput = props => {
 
     return endDate;
   };
+
   const initialState = {
+    isCustomRange: false,
     dropdownOpen: false,
     calendarOpen: false,
     numCalendars: 2,
-    focusedInput: 'startDate',
+    focusedInput: START_DATE,
     currentValue: getInitialCurrentValue(),
     startDate: getInitialStartDate(),
     endDate: getInitialEndDate(),
@@ -154,7 +123,29 @@ const DateRangeInput = props => {
 
   const [state, dispatch] = useReducer(reducer, initialState);
 
-  // useMediaQuery(setNumCalendars, props.singleCalendarBreakpoint);
+  useEffect(() => {
+    let media =
+      'only screen and (max-width: ' + props.singleCalendarBreakpoint + 'px)';
+    const mediaQuery = window.matchMedia(media);
+    const observeMediaQuery = () => {
+      let matches = mediaQuery.matches;
+      let numCalendars = matches ? 1 : 2;
+
+      dispatch({
+        type: UPDATE_STATE_VALUE,
+        name: 'numCalendars',
+        value: numCalendars,
+      });
+    };
+
+    mediaQuery.addListener(observeMediaQuery);
+
+    observeMediaQuery();
+
+    return () => {
+      mediaQuery.removeListener(observeMediaQuery);
+    };
+  }, [dispatch, props.singleCalendarBreakpoint]);
 
   const isCalendarOpen = () => {
     return props.alwaysShowCalendar || state.calendarOpen;
@@ -201,7 +192,7 @@ const DateRangeInput = props => {
     !props.value.isSame(state.currentValue)
   ) {
     dateRange = props.value;
-  } else if (!props.value && !state.currentValue) {
+  } else if (!props.value && !state.currentValue && !state.isCustomRange) {
     dateRange = props.defaultValue;
   }
 
@@ -211,11 +202,13 @@ const DateRangeInput = props => {
       name: 'currentValue',
       value: dateRange,
     });
+
     dispatch({
       type: UPDATE_STATE_VALUE,
       name: 'startDate',
       value: dateRange.start,
     });
+
     dispatch({
       type: UPDATE_STATE_VALUE,
       name: 'endDate',
@@ -259,9 +252,8 @@ DateRangeInput.propTypes = {
   maximumDate: PropTypes.instanceOf(Date),
   minimumDate: PropTypes.instanceOf(Date),
   defaultDisplayValue: PropTypes.string,
-  selectSingleDay: PropTypes.bool,
   wrapperClass: PropTypes.string,
-  // Size of each day in the calendar in pixels
+  // Visual size of each day in the calendar in pixels
   daySize: PropTypes.number,
 };
 
@@ -275,7 +267,6 @@ DateRangeInput.defaultProps = {
   maximumDate: null,
   minimumDate: null,
   defaultDisplayValue: 'Select a date range',
-  selectSingleDay: true,
   wrapperClass: 'DateInputWrapper',
   daySize: 36,
 };

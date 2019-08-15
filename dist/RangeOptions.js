@@ -9,6 +9,8 @@ var _react = _interopRequireWildcard(require("react"));
 
 var _propTypes = _interopRequireDefault(require("prop-types"));
 
+var _constants = require("react-dates/constants");
+
 var _RangeOptionItem = _interopRequireDefault(require("./RangeOptionItem"));
 
 var _CalendarContext = _interopRequireDefault(require("./Utils/CalendarContext"));
@@ -30,21 +32,44 @@ var __signature__ = typeof reactHotLoaderGlobal !== 'undefined' ? reactHotLoader
 
 var RangeOptions = function RangeOptions(props) {
   var _useContext = (0, _react.useContext)(_CalendarContext["default"]),
-      currentValue = _useContext.state.currentValue,
+      _useContext$state = _useContext.state,
+      currentValue = _useContext$state.currentValue,
+      isCustomRange = _useContext$state.isCustomRange,
       dispatch = _useContext.dispatch,
       closeDropdownOnTimeout = _useContext.closeDropdownOnTimeout;
 
-  var clearSelectedRange = function clearSelectedRange() {
-    var clearCurrentValue = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
-
-    if (clearCurrentValue) {
-      dispatch({
-        type: _reducer.UPDATE_STATE_VALUE,
-        name: 'currentValue',
-        value: null
-      });
+  (0, _react.useEffect)(function () {
+    if (!props.ranges.length) {
+      return;
     }
 
+    var isCustom = true;
+    props.ranges.forEach(function (range) {
+      if (currentValue && currentValue.isSame(range.value)) {
+        isCustom = false;
+      }
+    });
+
+    if (isCustom !== isCustomRange) {
+      dispatch({
+        type: _reducer.UPDATE_STATE_VALUE,
+        name: 'isCustomRange',
+        value: isCustom
+      });
+    }
+  }, [isCustomRange, currentValue, props.ranges, dispatch]);
+
+  var clearSelectedRange = function clearSelectedRange() {
+    dispatch({
+      type: _reducer.UPDATE_STATE_VALUE,
+      name: 'isCustomRange',
+      value: true
+    });
+    dispatch({
+      type: _reducer.UPDATE_STATE_VALUE,
+      name: 'currentValue',
+      value: null
+    });
     dispatch({
       type: _reducer.UPDATE_STATE_VALUE,
       name: 'startDate',
@@ -58,7 +83,7 @@ var RangeOptions = function RangeOptions(props) {
     dispatch({
       type: _reducer.UPDATE_STATE_VALUE,
       name: 'focusedInput',
-      value: 'startDate'
+      value: _constants.START_DATE
     });
   };
 
@@ -87,38 +112,22 @@ var RangeOptions = function RangeOptions(props) {
     closeDropdownOnTimeout();
   };
 
-  var isCurrentValueCustomRange = function isCurrentValueCustomRange() {
-    // if (currentValue === null) {
-    //   return false;
-    // }
-    var isCustom = true;
-    props.ranges.forEach(function (range) {
-      if (currentValue && currentValue.isSame(range.value)) {
-        isCustom = false;
-      }
-    });
-    return isCustom;
-  };
-
   var ranges = '';
 
   if (props.ranges.length > 0) {
-    var isCustomRange = isCurrentValueCustomRange();
     ranges = _react["default"].createElement("ul", {
       className: "dateRangeInput__defined-ranges"
     }, props.ranges.map(function (range) {
       return _react["default"].createElement(_RangeOptionItem["default"], {
         key: "range_".concat(range.label),
-        ranges: ranges,
         value: range.value,
         label: range.label,
-        onClick: handlePredefinedRangeSelect,
-        isCustomRange: isCustomRange
+        onClick: handlePredefinedRangeSelect
       });
     }), _react["default"].createElement(_RangeOptionItem["default"], {
       value: null,
       label: "Custom Range",
-      onClick: clearSelectedRange.bind(null, true),
+      onClick: clearSelectedRange.bind(null),
       isCustomRange: isCustomRange
     }));
   }
@@ -126,7 +135,7 @@ var RangeOptions = function RangeOptions(props) {
   return ranges;
 };
 
-__signature__(RangeOptions, "useContext{{\n    state: { currentValue },\n    dispatch,\n    closeDropdownOnTimeout,\n  }}");
+__signature__(RangeOptions, "useContext{{\n    state: { currentValue, isCustomRange },\n    dispatch,\n    closeDropdownOnTimeout,\n  }}\nuseEffect{}");
 
 RangeOptions.propTypes = {
   ranges: _propTypes["default"].array.isRequired,

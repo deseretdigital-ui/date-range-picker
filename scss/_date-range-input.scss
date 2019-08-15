@@ -6,7 +6,6 @@
 .dateRangeInput__input {
   color: $light-grey;
   height: 24px;
-  padding: 8px;
   margin-bottom: 10px;
   font-size: 0.8em;
   border: 1px solid $light-grey;
@@ -17,7 +16,7 @@
   user-select: none;
   box-sizing: border-box;
   height: 42px;
-  padding: 8px 8px 8px 26px;
+  padding: 8px 8px 8px 34px;
 
   @include respond-to(wide-screens) {
     font-size: 1.3em;
@@ -36,10 +35,16 @@
 
   .calendar-icon {
     fill: #9d9d9d;
-    width: 26px;
     display: inline-block;
     position: absolute;
-    left: 12px;
+    width: 20px;
+    left: 8px;
+    bottom: 21px;
+
+    @include respond-to(wide-screens) {
+      width: 26px;
+      left: 12px;
+    }
   }
 }
 
@@ -121,6 +126,7 @@
   display: inline-block;
   width: 100%;
   padding: 4px 10px;
+  cursor: pointer;
 
   font-weight: 300;
   background-color: $rangeButtonBackground;

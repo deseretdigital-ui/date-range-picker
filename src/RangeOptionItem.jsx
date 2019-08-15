@@ -11,7 +11,7 @@ const RangeOptionItem = props => {
     dispatch,
     isCalendarOpen,
   } = useContext(CalendarContext);
-  const calendarOpen = isCalendarOpen();
+
   const handleHighlightRange = range => {
     if (!isCalendarOpen()) {
       return;
@@ -26,7 +26,7 @@ const RangeOptionItem = props => {
     dispatch({
       type: UPDATE_STATE_VALUE,
       name: 'endDate',
-      value: range ? range.start : null,
+      value: range ? range.end : null,
     });
   };
 
@@ -54,12 +54,8 @@ const RangeOptionItem = props => {
       (isValidDate(currentValue) &&
         props.value &&
         currentValue.isSame(props.value)) ||
-      (props.isCustomRange || calendarOpen),
+      props.isCustomRange,
   };
-
-  if (calendarOpen) {
-    classes['dateRangeInput__rangeButton--active'] = false;
-  }
 
   return (
     <li>

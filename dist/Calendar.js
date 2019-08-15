@@ -11,6 +11,8 @@ var _propTypes = _interopRequireDefault(require("prop-types"));
 
 var _reactDates = require("react-dates");
 
+var _constants = require("react-dates/constants");
+
 var _momentRange = _interopRequireDefault(require("./Utils/momentRange"));
 
 var _isValidDate = _interopRequireDefault(require("./Utils/isValidDate"));
@@ -43,7 +45,7 @@ var Calendar = function Calendar(props) {
       dispatch = _useContext.dispatch,
       closeDropdownOnTimeout = _useContext.closeDropdownOnTimeout;
 
-  var handleIsOutsideRange = (0, _react.useCallback)(function (day) {
+  var handleIsOutsideRange = function handleIsOutsideRange(day) {
     var outside = false;
     var minDate = null;
     var maxDate = null;
@@ -65,15 +67,17 @@ var Calendar = function Calendar(props) {
     }
 
     return outside;
-  }, [props]);
-  var handleFocusChange = (0, _react.useCallback)(function (newFocusedInput) {
+  };
+
+  var handleFocusChange = function handleFocusChange(newFocusedInput) {
     return dispatch({
       type: _reducer.UPDATE_STATE_VALUE,
       name: 'focusedInput',
-      value: newFocusedInput ? newFocusedInput : 'startDate'
+      value: newFocusedInput ? newFocusedInput : _constants.START_DATE
     });
-  }, [dispatch]);
-  var handleDateChange = (0, _react.useCallback)(function (date) {
+  };
+
+  var handleDateChange = function handleDateChange(date) {
     if (date.startDate && date.endDate) {
       var range = _momentRange["default"].range(date.startDate.startOf('day'), date.endDate.startOf('day'));
 
@@ -94,7 +98,7 @@ var Calendar = function Calendar(props) {
       });
       props.onDateSelected(range); // Close the calendar after selecting the end date
 
-      if (focusedInput == 'endDate') {
+      if (focusedInput == _constants.END_DATE) {
         closeDropdownOnTimeout();
       }
     } else if (date.startDate) {
@@ -120,7 +124,8 @@ var Calendar = function Calendar(props) {
         value: date.endDate
       });
     }
-  }, [dispatch, closeDropdownOnTimeout, props, focusedInput]);
+  };
+
   var calendarProps = {
     onDatesChange: handleDateChange,
     onFocusChange: handleFocusChange,
@@ -157,7 +162,7 @@ var Calendar = function Calendar(props) {
   return _react["default"].createElement(_reactDates.DayPickerRangeController, calendarProps);
 };
 
-__signature__(Calendar, "useContext{{\n    state: { numCalendars, focusedInput, startDate, endDate, currentValue },\n    dispatch,\n    closeDropdownOnTimeout,\n  }}\nuseCallback{handleIsOutsideRange}\nuseCallback{handleFocusChange}\nuseCallback{handleDateChange}");
+__signature__(Calendar, "useContext{{\n    state: { numCalendars, focusedInput, startDate, endDate, currentValue },\n    dispatch,\n    closeDropdownOnTimeout,\n  }}");
 
 Calendar.propTypes = {
   daySize: _propTypes["default"].number.isRequired,

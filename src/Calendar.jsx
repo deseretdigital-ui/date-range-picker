@@ -1,6 +1,7 @@
-import React, { useContext, useCallback } from 'react';
+import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
 import { DayPickerRangeController } from 'react-dates';
+import { START_DATE, END_DATE } from 'react-dates/constants';
 import moment from './Utils/momentRange';
 import isValidDate from './Utils/isValidDate';
 import CalendarContext from './Utils/CalendarContext';
@@ -12,97 +13,88 @@ const Calendar = props => {
     dispatch,
     closeDropdownOnTimeout,
   } = useContext(CalendarContext);
-  const handleIsOutsideRange = useCallback(
-    day => {
-      let outside = false;
-      let minDate = null;
-      let maxDate = null;
+  const handleIsOutsideRange = day => {
+    let outside = false;
+    let minDate = null;
+    let maxDate = null;
 
-      if (props.minimumDate) {
-        minDate = moment(props.minimumDate);
-        if (day.isBefore(minDate)) {
-          outside = true;
-        }
+    if (props.minimumDate) {
+      minDate = moment(props.minimumDate);
+      if (day.isBefore(minDate)) {
+        outside = true;
       }
+    }
 
-      if (props.maximumDate) {
-        maxDate = moment(props.maximumDate);
-        if (day.isAfter(maxDate)) {
-          outside = true;
-        }
+    if (props.maximumDate) {
+      maxDate = moment(props.maximumDate);
+      if (day.isAfter(maxDate)) {
+        outside = true;
       }
+    }
 
-      return outside;
-    },
-    [props]
-  );
+    return outside;
+  };
 
-  const handleFocusChange = useCallback(
-    newFocusedInput =>
+  const handleFocusChange = newFocusedInput =>
+    dispatch({
+      type: UPDATE_STATE_VALUE,
+      name: 'focusedInput',
+      value: newFocusedInput ? newFocusedInput : START_DATE,
+    });
+
+  const handleDateChange = date => {
+    if (date.startDate && date.endDate) {
+      let range = moment.range(
+        date.startDate.startOf('day'),
+        date.endDate.startOf('day')
+      );
+
       dispatch({
         type: UPDATE_STATE_VALUE,
-        name: 'focusedInput',
-        value: newFocusedInput ? newFocusedInput : 'startDate',
-      }),
-    [dispatch]
-  );
+        name: 'currentValue',
+        value: range,
+      });
+      dispatch({
+        type: UPDATE_STATE_VALUE,
+        name: 'startDate',
+        value: date.startDate,
+      });
+      dispatch({
+        type: UPDATE_STATE_VALUE,
+        name: 'endDate',
+        value: date.endDate,
+      });
 
-  const handleDateChange = useCallback(
-    date => {
-      if (date.startDate && date.endDate) {
-        let range = moment.range(
-          date.startDate.startOf('day'),
-          date.endDate.startOf('day')
-        );
+      props.onDateSelected(range);
 
-        dispatch({
-          type: UPDATE_STATE_VALUE,
-          name: 'currentValue',
-          value: range,
-        });
-        dispatch({
-          type: UPDATE_STATE_VALUE,
-          name: 'startDate',
-          value: date.startDate,
-        });
-        dispatch({
-          type: UPDATE_STATE_VALUE,
-          name: 'endDate',
-          value: date.endDate,
-        });
-
-        props.onDateSelected(range);
-
-        // Close the calendar after selecting the end date
-        if (focusedInput == 'endDate') {
-          closeDropdownOnTimeout();
-        }
-      } else if (date.startDate) {
-        dispatch({
-          type: UPDATE_STATE_VALUE,
-          name: 'startDate',
-          value: date.startDate,
-        });
-        dispatch({
-          type: UPDATE_STATE_VALUE,
-          name: 'endDate',
-          value: null,
-        });
-      } else if (date.endDate) {
-        dispatch({
-          type: UPDATE_STATE_VALUE,
-          name: 'startDate',
-          value: null,
-        });
-        dispatch({
-          type: UPDATE_STATE_VALUE,
-          name: 'endDate',
-          value: date.endDate,
-        });
+      // Close the calendar after selecting the end date
+      if (focusedInput == END_DATE) {
+        closeDropdownOnTimeout();
       }
-    },
-    [dispatch, closeDropdownOnTimeout, props, focusedInput]
-  );
+    } else if (date.startDate) {
+      dispatch({
+        type: UPDATE_STATE_VALUE,
+        name: 'startDate',
+        value: date.startDate,
+      });
+      dispatch({
+        type: UPDATE_STATE_VALUE,
+        name: 'endDate',
+        value: null,
+      });
+    } else if (date.endDate) {
+      dispatch({
+        type: UPDATE_STATE_VALUE,
+        name: 'startDate',
+        value: null,
+      });
+      dispatch({
+        type: UPDATE_STATE_VALUE,
+        name: 'endDate',
+        value: date.endDate,
+      });
+    }
+  };
 
   let calendarProps = {
     onDatesChange: handleDateChange,

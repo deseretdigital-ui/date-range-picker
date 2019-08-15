@@ -36,8 +36,6 @@ var RangeOptionItem = function RangeOptionItem(props) {
       dispatch = _useContext.dispatch,
       isCalendarOpen = _useContext.isCalendarOpen;
 
-  var calendarOpen = isCalendarOpen();
-
   var handleHighlightRange = function handleHighlightRange(range) {
     if (!isCalendarOpen()) {
       return;
@@ -51,7 +49,7 @@ var RangeOptionItem = function RangeOptionItem(props) {
     dispatch({
       type: _reducer.UPDATE_STATE_VALUE,
       name: 'endDate',
-      value: range ? range.start : null
+      value: range ? range.end : null
     });
   };
 
@@ -74,13 +72,8 @@ var RangeOptionItem = function RangeOptionItem(props) {
 
   var classes = {
     dateRangeInput__rangeButton: true,
-    'dateRangeInput__rangeButton--active': (0, _isValidDate["default"])(currentValue) && props.value && currentValue.isSame(props.value) || props.isCustomRange || calendarOpen
+    'dateRangeInput__rangeButton--active': (0, _isValidDate["default"])(currentValue) && props.value && currentValue.isSame(props.value) || props.isCustomRange
   };
-
-  if (calendarOpen) {
-    classes['dateRangeInput__rangeButton--active'] = false;
-  }
-
   return _react["default"].createElement("li", null, _react["default"].createElement("button", {
     type: "button",
     onMouseEnter: handleHighlightRange.bind(null, props.value),

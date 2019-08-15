@@ -9,6 +9,8 @@ var _react = _interopRequireWildcard(require("react"));
 
 var _propTypes = _interopRequireDefault(require("prop-types"));
 
+var _constants = require("react-dates/constants");
+
 var _isValidDate = _interopRequireDefault(require("./Utils/isValidDate"));
 
 var _CalendarContext = _interopRequireDefault(require("./Utils/CalendarContext"));
@@ -47,25 +49,16 @@ var InputButton = function InputButton(props) {
   };
 
   var toggleDropdown = function toggleDropdown() {
-    var dropdownOpenNew = !dropdownOpen; // let focusedInput = dropdownOpenNew ? null : 'startDate';
-
-    var focusedInput = 'startDate';
     dispatch({
       type: _reducer.UPDATE_STATE_VALUE,
       name: 'dropdownOpen',
-      value: dropdownOpenNew
+      value: !dropdownOpen
     });
     dispatch({
       type: _reducer.UPDATE_STATE_VALUE,
       name: 'focusedInput',
-      value: focusedInput
-    }); // if (dropdownOpenNew && props.ranges.length === 0) {
-    //   dispatch({
-    //     type: UPDATE_STATE_VALUE,
-    //     name: 'focusedInput',
-    //     value: 'startDate',
-    //   });
-    // }
+      value: _constants.START_DATE
+    });
   };
   /* eslint-disable max-len */
 

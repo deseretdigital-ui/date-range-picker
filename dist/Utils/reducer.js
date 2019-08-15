@@ -27,10 +27,6 @@ exports.UPDATE_STATE_VALUE = UPDATE_STATE_VALUE;
 var _default = function _default(state, action) {
   switch (action.type) {
     case UPDATE_STATE_VALUE:
-      console.log({
-        action: action,
-        newState: _objectSpread({}, state, _defineProperty({}, action.name, action.value))
-      });
       return _objectSpread({}, state, _defineProperty({}, action.name, action.value));
 
     default:
