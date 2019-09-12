@@ -24,7 +24,7 @@ ReactDom.render(
       moment()
         .startOf('day')
         .subtract(30, 'days'),
-      moment().startOf('day')
+      moment().endOf('day')
     )}
   />,
   document.getElementById('dateRangeExample')
@@ -37,7 +37,7 @@ ReactDom.render(
       moment()
         .startOf('day')
         .subtract(6, 'days'),
-      moment().startOf('day')
+      moment().endOf('day')
     )}
   />,
   document.getElementById('dateRangeExampleNoRanges')

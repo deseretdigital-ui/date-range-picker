@@ -31,10 +31,12 @@ var _momentRange = _interopRequireDefault(require("./Utils/momentRange"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
-function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = Object.defineProperty && Object.getOwnPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : {}; if (desc.get || desc.set) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } } newObj["default"] = obj; return newObj; } }
+function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return null; var cache = new WeakMap(); _getRequireWildcardCache = function _getRequireWildcardCache() { return cache; }; return cache; }
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } var cache = _getRequireWildcardCache(); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; if (obj != null) { var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } } newObj["default"] = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
 
 (function () {
-  var enterModule = (typeof reactHotLoaderGlobal !== 'undefined' ? reactHotLoaderGlobal : require('react-hot-loader')).enterModule;
+  var enterModule = typeof reactHotLoaderGlobal !== 'undefined' ? reactHotLoaderGlobal.enterModule : undefined;
   enterModule && enterModule(module);
 })();
 
@@ -42,7 +44,7 @@ function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArra
 
 function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance"); }
 
-function _iterableToArrayLimit(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
+function _iterableToArrayLimit(arr, i) { if (!(Symbol.iterator in Object(arr) || Object.prototype.toString.call(arr) === "[object Arguments]")) { return; } var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
 
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
@@ -57,19 +59,19 @@ var defaultRanges = [{
   value: _momentRange["default"].range((0, _momentRange["default"])().startOf('day'), (0, _momentRange["default"])().startOf('day'))
 }, {
   label: 'Yesterday',
-  value: _momentRange["default"].range((0, _momentRange["default"])().startOf('day').subtract(1, 'days'), (0, _momentRange["default"])().startOf('day').subtract(1, 'days'))
+  value: _momentRange["default"].range((0, _momentRange["default"])().startOf('day').subtract(1, 'days'), (0, _momentRange["default"])().endOf('day').subtract(1, 'days'))
 }, {
   label: 'Last 7 Days',
-  value: _momentRange["default"].range((0, _momentRange["default"])().startOf('day').subtract(6, 'days'), (0, _momentRange["default"])().startOf('day'))
+  value: _momentRange["default"].range((0, _momentRange["default"])().startOf('day').subtract(6, 'days'), (0, _momentRange["default"])().endOf('day'))
 }, {
   label: 'Last 30 Days',
-  value: _momentRange["default"].range((0, _momentRange["default"])().startOf('day').subtract(30, 'days'), (0, _momentRange["default"])().startOf('day'))
+  value: _momentRange["default"].range((0, _momentRange["default"])().startOf('day').subtract(30, 'days'), (0, _momentRange["default"])().endOf('day'))
 }, {
   label: 'This Month',
-  value: _momentRange["default"].range((0, _momentRange["default"])().startOf('month').startOf('day'), (0, _momentRange["default"])().endOf('month').startOf('day'))
+  value: _momentRange["default"].range((0, _momentRange["default"])().startOf('month').startOf('day'), (0, _momentRange["default"])().endOf('month').endOf('day'))
 }, {
   label: 'Last Month',
-  value: _momentRange["default"].range((0, _momentRange["default"])().subtract(1, 'month').startOf('month').startOf('day'), (0, _momentRange["default"])().subtract(1, 'month').endOf('month').startOf('day'))
+  value: _momentRange["default"].range((0, _momentRange["default"])().subtract(1, 'month').startOf('month').startOf('day'), (0, _momentRange["default"])().subtract(1, 'month').endOf('month').endOf('day'))
 }];
 
 var DateRangeInput = function DateRangeInput(props) {
@@ -147,26 +149,42 @@ var DateRangeInput = function DateRangeInput(props) {
 
   var isCalendarOpen = function isCalendarOpen() {
     return props.alwaysShowCalendar || state.calendarOpen;
-  }; // These close functions need to be defined before the following useEffect
+  }; // These close functions need to be defined before the following useCallback
 
 
-  var closeDropdownOnTimeout = function closeDropdownOnTimeout() {
+  var closeDropdownOnTimeout = (0, _react.useCallback)(function () {
     setTimeout(function () {
       dispatch({
         type: _reducer.UPDATE_STATE_VALUE,
         name: 'dropdownOpen',
         value: false
       });
-    }, 0);
-  };
 
+      if (state.startDate && !state.endDate) {
+        // If the dropdown is closing and the user selecting only a start date,
+        // set the end date to be the same as the start date
+        // and update currentValue
+        var newEndDate = (0, _momentRange["default"])(state.startDate);
+        dispatch({
+          type: _reducer.UPDATE_STATE_VALUE,
+          name: 'endDate',
+          value: newEndDate
+        });
+        dispatch({
+          type: _reducer.UPDATE_STATE_VALUE,
+          name: 'currentValue',
+          value: _momentRange["default"].range(state.startDate, newEndDate)
+        });
+      }
+    }, 0);
+  }, [state.startDate, state.endDate]);
   var closeDropdown = (0, _react.useCallback)(function (e) {
     var wrapper = dateRangeInputWrapperRef.current;
 
-    if (wrapper && !wrapper.contains(e.target)) {
+    if (state.dropdownOpen && wrapper && !wrapper.contains(e.target)) {
       closeDropdownOnTimeout();
     }
-  }, [dateRangeInputWrapperRef]);
+  }, [state.dropdownOpen, closeDropdownOnTimeout, dateRangeInputWrapperRef]);
   (0, _react.useEffect)(function () {
     window.addEventListener('mousedown', closeDropdown, false);
     window.addEventListener('touchstart', closeDropdown, false);
@@ -224,7 +242,7 @@ var DateRangeInput = function DateRangeInput(props) {
   })));
 };
 
-__signature__(DateRangeInput, "useRef{dateRangeInputWrapperRef}\nuseReducer{[state, dispatch](initialState)}\nuseEffect{}\nuseCallback{closeDropdown}\nuseEffect{}");
+__signature__(DateRangeInput, "useRef{dateRangeInputWrapperRef}\nuseReducer{[state, dispatch](initialState)}\nuseEffect{}\nuseCallback{closeDropdownOnTimeout}\nuseCallback{closeDropdown}\nuseEffect{}");
 
 DateRangeInput.propTypes = {
   onDateSelected: _propTypes["default"].func,
@@ -264,7 +282,7 @@ exports["default"] = _default2;
 ;
 
 (function () {
-  var reactHotLoader = (typeof reactHotLoaderGlobal !== 'undefined' ? reactHotLoaderGlobal : require('react-hot-loader')).default;
+  var reactHotLoader = typeof reactHotLoaderGlobal !== 'undefined' ? reactHotLoaderGlobal.default : undefined;
 
   if (!reactHotLoader) {
     return;
@@ -278,6 +296,6 @@ exports["default"] = _default2;
 ;
 
 (function () {
-  var leaveModule = (typeof reactHotLoaderGlobal !== 'undefined' ? reactHotLoaderGlobal : require('react-hot-loader')).leaveModule;
+  var leaveModule = typeof reactHotLoaderGlobal !== 'undefined' ? reactHotLoaderGlobal.leaveModule : undefined;
   leaveModule && leaveModule(module);
 })();

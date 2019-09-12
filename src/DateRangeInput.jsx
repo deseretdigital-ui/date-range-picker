@@ -24,7 +24,7 @@ const defaultRanges = [
         .startOf('day')
         .subtract(1, 'days'),
       moment()
-        .startOf('day')
+        .endOf('day')
         .subtract(1, 'days')
     ),
   },
@@ -34,7 +34,7 @@ const defaultRanges = [
       moment()
         .startOf('day')
         .subtract(6, 'days'),
-      moment().startOf('day')
+      moment().endOf('day')
     ),
   },
   {
@@ -43,7 +43,7 @@ const defaultRanges = [
       moment()
         .startOf('day')
         .subtract(30, 'days'),
-      moment().startOf('day')
+      moment().endOf('day')
     ),
   },
   {
@@ -54,7 +54,7 @@ const defaultRanges = [
         .startOf('day'),
       moment()
         .endOf('month')
-        .startOf('day')
+        .endOf('day')
     ),
   },
   {
@@ -67,7 +67,7 @@ const defaultRanges = [
       moment()
         .subtract(1, 'month')
         .endOf('month')
-        .startOf('day')
+        .endOf('day')
     ),
   },
 ];
@@ -151,26 +151,44 @@ const DateRangeInput = props => {
     return props.alwaysShowCalendar || state.calendarOpen;
   };
 
-  // These close functions need to be defined before the following useEffect
-  const closeDropdownOnTimeout = () => {
+  // These close functions need to be defined before the following useCallback
+  const closeDropdownOnTimeout = useCallback(() => {
     setTimeout(() => {
       dispatch({
         type: UPDATE_STATE_VALUE,
         name: 'dropdownOpen',
         value: false,
       });
+
+      if (state.startDate && !state.endDate) {
+        // If the dropdown is closing and the user selected only a start date,
+        // set the end date to be the same as the start date
+        // and update currentValue
+        const newEndDate = moment(state.startDate);
+        dispatch({
+          type: UPDATE_STATE_VALUE,
+          name: 'endDate',
+          value: newEndDate,
+        });
+
+        dispatch({
+          type: UPDATE_STATE_VALUE,
+          name: 'currentValue',
+          value: moment.range(state.startDate, newEndDate),
+        });
+      }
     }, 0);
-  };
+  }, [state.startDate, state.endDate]);
 
   const closeDropdown = useCallback(
     e => {
       let wrapper = dateRangeInputWrapperRef.current;
 
-      if (wrapper && !wrapper.contains(e.target)) {
+      if (state.dropdownOpen && wrapper && !wrapper.contains(e.target)) {
         closeDropdownOnTimeout();
       }
     },
-    [dateRangeInputWrapperRef]
+    [state.dropdownOpen, closeDropdownOnTimeout, dateRangeInputWrapperRef]
   );
 
   useEffect(() => {
