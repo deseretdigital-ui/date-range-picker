@@ -61,6 +61,11 @@ var InputButton = function InputButton(props) {
       name: 'focusedInput',
       value: _constants.START_DATE
     });
+    dispatch({
+      type: _reducer.UPDATE_STATE_VALUE,
+      name: 'closeDropdown',
+      value: false
+    });
   };
   /* eslint-disable max-len */
 

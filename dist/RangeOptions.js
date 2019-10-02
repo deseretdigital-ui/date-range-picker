@@ -37,8 +37,7 @@ var RangeOptions = function RangeOptions(props) {
       _useContext$state = _useContext.state,
       currentValue = _useContext$state.currentValue,
       isCustomRange = _useContext$state.isCustomRange,
-      dispatch = _useContext.dispatch,
-      closeDropdownOnTimeout = _useContext.closeDropdownOnTimeout;
+      dispatch = _useContext.dispatch;
 
   (0, _react.useEffect)(function () {
     if (!props.ranges.length) {
@@ -111,7 +110,11 @@ var RangeOptions = function RangeOptions(props) {
       value: false
     });
     props.onDateSelected(range);
-    closeDropdownOnTimeout();
+    dispatch({
+      type: _reducer.UPDATE_STATE_VALUE,
+      name: 'closeDropdown',
+      value: true
+    });
   };
 
   var ranges = '';
@@ -137,7 +140,7 @@ var RangeOptions = function RangeOptions(props) {
   return ranges;
 };
 
-__signature__(RangeOptions, "useContext{{\n    state: { currentValue, isCustomRange },\n    dispatch,\n    closeDropdownOnTimeout,\n  }}\nuseEffect{}");
+__signature__(RangeOptions, "useContext{{\n    state: { currentValue, isCustomRange },\n    dispatch,\n  }}\nuseEffect{}");
 
 RangeOptions.propTypes = {
   ranges: _propTypes["default"].array.isRequired,

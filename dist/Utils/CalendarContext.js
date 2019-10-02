@@ -22,14 +22,13 @@ var _default = _react["default"].createContext({
   // State values
   dropdownOpen: false,
   calendarOpen: false,
+  closeDropown: false,
   numCalendars: 2,
   focusedInput: 'startDate',
   currentValue: null,
   startDate: null,
   endDate: null,
   // Util functions
-  closeDropdownOnTimeout: function closeDropdownOnTimeout() {},
-  closeDropdown: function closeDropdown() {},
   isCalendarOpen: function isCalendarOpen() {}
 });
 

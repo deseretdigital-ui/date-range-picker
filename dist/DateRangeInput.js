@@ -114,6 +114,7 @@ var DateRangeInput = function DateRangeInput(props) {
     isCustomRange: false,
     dropdownOpen: false,
     calendarOpen: false,
+    closeDropown: false,
     numCalendars: 2,
     focusedInput: _constants.START_DATE,
     currentValue: getInitialCurrentValue(),
@@ -149,19 +150,14 @@ var DateRangeInput = function DateRangeInput(props) {
 
   var isCalendarOpen = function isCalendarOpen() {
     return props.alwaysShowCalendar || state.calendarOpen;
-  }; // These close functions need to be defined before the following useCallback
+  }; // These close functions need to be defined before
+  // the useEffect function below
 
 
   var closeDropdownOnTimeout = (0, _react.useCallback)(function () {
     setTimeout(function () {
-      dispatch({
-        type: _reducer.UPDATE_STATE_VALUE,
-        name: 'dropdownOpen',
-        value: false
-      });
-
       if (state.startDate && !state.endDate) {
-        // If the dropdown is closing and the user selecting only a start date,
+        // If the dropdown is closing and the user selected only a start date,
         // set the end date to be the same as the start date
         // and update currentValue
         var newEndDate = (0, _momentRange["default"])(state.startDate);
@@ -176,6 +172,12 @@ var DateRangeInput = function DateRangeInput(props) {
           value: _momentRange["default"].range(state.startDate, newEndDate)
         });
       }
+
+      dispatch({
+        type: _reducer.UPDATE_STATE_VALUE,
+        name: 'dropdownOpen',
+        value: false
+      });
     }, 0);
   }, [state.startDate, state.endDate]);
   var closeDropdown = (0, _react.useCallback)(function (e) {
@@ -192,7 +194,21 @@ var DateRangeInput = function DateRangeInput(props) {
       window.removeEventListener('mousedown', closeDropdown);
       window.removeEventListener('touchstart', closeDropdown);
     };
-  }, [closeDropdown]); // Determine if the state needs to be udpated
+  }, [closeDropdown]);
+  (0, _react.useEffect)(function () {
+    // This is like a listener. If the closeDropdown state value is true
+    // and the dropdown is open, then the dropodown should be closed. Doing it
+    // This way makes it so that all state values are up to date when the
+    // closeDropdownOnTimeout function is called
+    if (state.closeDropdown && state.dropdownOpen) {
+      closeDropdownOnTimeout();
+      dispatch({
+        type: _reducer.UPDATE_STATE_VALUE,
+        name: 'closeDropdown',
+        value: false
+      });
+    }
+  }, [state.closeDropdown, state.dropdownOpen, closeDropdownOnTimeout]); // Determine if the state needs to be udpated
 
   var dateRange = null;
 
@@ -224,8 +240,7 @@ var DateRangeInput = function DateRangeInput(props) {
     value: {
       state: state,
       dispatch: dispatch,
-      isCalendarOpen: isCalendarOpen,
-      closeDropdownOnTimeout: closeDropdownOnTimeout
+      isCalendarOpen: isCalendarOpen
     }
   }, _react["default"].createElement("div", {
     className: wrapperClasses,
@@ -242,7 +257,7 @@ var DateRangeInput = function DateRangeInput(props) {
   })));
 };
 
-__signature__(DateRangeInput, "useRef{dateRangeInputWrapperRef}\nuseReducer{[state, dispatch](initialState)}\nuseEffect{}\nuseCallback{closeDropdownOnTimeout}\nuseCallback{closeDropdown}\nuseEffect{}");
+__signature__(DateRangeInput, "useRef{dateRangeInputWrapperRef}\nuseReducer{[state, dispatch](initialState)}\nuseEffect{}\nuseCallback{closeDropdownOnTimeout}\nuseCallback{closeDropdown}\nuseEffect{}\nuseEffect{}");
 
 DateRangeInput.propTypes = {
   onDateSelected: _propTypes["default"].func,

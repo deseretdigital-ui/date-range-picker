@@ -44,8 +44,8 @@ var Calendar = function Calendar(props) {
       startDate = _useContext$state.startDate,
       endDate = _useContext$state.endDate,
       currentValue = _useContext$state.currentValue,
-      dispatch = _useContext.dispatch,
-      closeDropdownOnTimeout = _useContext.closeDropdownOnTimeout;
+      dropdownOpen = _useContext$state.dropdownOpen,
+      dispatch = _useContext.dispatch;
 
   var handleIsOutsideRange = function handleIsOutsideRange(day) {
     var outside = false;
@@ -98,10 +98,14 @@ var Calendar = function Calendar(props) {
         name: 'endDate',
         value: date.endDate
       });
-      props.onDateSelected(range); // Close the calendar after selecting the end date
+      props.onDateSelected(range); // Close the calendar after selecting the end date.
 
-      if (focusedInput == _constants.END_DATE) {
-        closeDropdownOnTimeout();
+      if (focusedInput == _constants.END_DATE && dropdownOpen) {
+        dispatch({
+          type: _reducer.UPDATE_STATE_VALUE,
+          name: 'closeDropdown',
+          value: true
+        });
       }
     } else if (date.startDate) {
       dispatch({
@@ -164,7 +168,7 @@ var Calendar = function Calendar(props) {
   return _react["default"].createElement(_reactDates.DayPickerRangeController, calendarProps);
 };
 
-__signature__(Calendar, "useContext{{\n    state: { numCalendars, focusedInput, startDate, endDate, currentValue },\n    dispatch,\n    closeDropdownOnTimeout,\n  }}");
+__signature__(Calendar, "useContext{{\n    state: {\n      numCalendars,\n      focusedInput,\n      startDate,\n      endDate,\n      currentValue,\n      dropdownOpen,\n    },\n    dispatch,\n  }}");
 
 Calendar.propTypes = {
   daySize: _propTypes["default"].number.isRequired,
