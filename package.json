@@ -27,6 +27,7 @@
     "start": "webpack-dev-server --hot"
   },
   "dependencies": {
+    "@babel/runtime": "^7.6.2",
     "airbnb-browser-shims": "^3.2.1",
     "classnames": "^2.2.6",
     "moment": "^2.18.1",
@@ -40,7 +41,6 @@
     "@babel/plugin-proposal-class-properties": "^7.5.5",
     "@babel/preset-env": "^7.6.0",
     "@babel/preset-react": "^7.0.0",
-    "@babel/runtime": "^7.6.0",
     "babel-eslint": "^10.0.2",
     "babel-loader": "^8.0.6",
     "css-loader": "^3.1.0",

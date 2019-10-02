@@ -9,7 +9,6 @@ const RangeOptions = props => {
   const {
     state: { currentValue, isCustomRange },
     dispatch,
-    closeDropdownOnTimeout,
   } = useContext(CalendarContext);
 
   useEffect(() => {
@@ -92,7 +91,12 @@ const RangeOptions = props => {
     });
 
     props.onDateSelected(range);
-    closeDropdownOnTimeout();
+
+    dispatch({
+      type: UPDATE_STATE_VALUE,
+      name: 'closeDropdown',
+      value: true,
+    });
   };
 
   let ranges = '';

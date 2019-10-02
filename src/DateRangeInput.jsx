@@ -114,6 +114,7 @@ const DateRangeInput = props => {
     isCustomRange: false,
     dropdownOpen: false,
     calendarOpen: false,
+    closeDropown: false,
     numCalendars: 2,
     focusedInput: START_DATE,
     currentValue: getInitialCurrentValue(),
@@ -151,15 +152,10 @@ const DateRangeInput = props => {
     return props.alwaysShowCalendar || state.calendarOpen;
   };
 
-  // These close functions need to be defined before the following useCallback
+  // These close functions need to be defined before
+  // the useEffect function below
   const closeDropdownOnTimeout = useCallback(() => {
     setTimeout(() => {
-      dispatch({
-        type: UPDATE_STATE_VALUE,
-        name: 'dropdownOpen',
-        value: false,
-      });
-
       if (state.startDate && !state.endDate) {
         // If the dropdown is closing and the user selected only a start date,
         // set the end date to be the same as the start date
@@ -177,6 +173,11 @@ const DateRangeInput = props => {
           value: moment.range(state.startDate, newEndDate),
         });
       }
+      dispatch({
+        type: UPDATE_STATE_VALUE,
+        name: 'dropdownOpen',
+        value: false,
+      });
     }, 0);
   }, [state.startDate, state.endDate]);
 
@@ -200,6 +201,21 @@ const DateRangeInput = props => {
       window.removeEventListener('touchstart', closeDropdown);
     };
   }, [closeDropdown]);
+
+  useEffect(() => {
+    // This is like a listener. If the closeDropdown state value is true
+    // and the dropdown is open, then the dropodown should be closed. Doing it
+    // This way makes it so that all state values are up to date when the
+    // closeDropdownOnTimeout function is called
+    if (state.closeDropdown && state.dropdownOpen) {
+      closeDropdownOnTimeout();
+      dispatch({
+        type: UPDATE_STATE_VALUE,
+        name: 'closeDropdown',
+        value: false,
+      });
+    }
+  }, [state.closeDropdown, state.dropdownOpen, closeDropdownOnTimeout]);
 
   // Determine if the state needs to be udpated
   let dateRange = null;
@@ -236,7 +252,11 @@ const DateRangeInput = props => {
 
   return (
     <CalendarContext.Provider
-      value={{ state, dispatch, isCalendarOpen, closeDropdownOnTimeout }}
+      value={{
+        state,
+        dispatch,
+        isCalendarOpen,
+      }}
     >
       <div className={wrapperClasses} ref={dateRangeInputWrapperRef}>
         <InputButton

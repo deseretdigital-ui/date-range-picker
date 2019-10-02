@@ -9,9 +9,15 @@ import { UPDATE_STATE_VALUE } from './Utils/reducer';
 
 const Calendar = props => {
   const {
-    state: { numCalendars, focusedInput, startDate, endDate, currentValue },
+    state: {
+      numCalendars,
+      focusedInput,
+      startDate,
+      endDate,
+      currentValue,
+      dropdownOpen,
+    },
     dispatch,
-    closeDropdownOnTimeout,
   } = useContext(CalendarContext);
   const handleIsOutsideRange = day => {
     let outside = false;
@@ -67,9 +73,13 @@ const Calendar = props => {
 
       props.onDateSelected(range);
 
-      // Close the calendar after selecting the end date
-      if (focusedInput == END_DATE) {
-        closeDropdownOnTimeout();
+      // Close the calendar after selecting the end date.
+      if (focusedInput == END_DATE && dropdownOpen) {
+        dispatch({
+          type: UPDATE_STATE_VALUE,
+          name: 'closeDropdown',
+          value: true,
+        });
       }
     } else if (date.startDate) {
       dispatch({

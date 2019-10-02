@@ -4,6 +4,7 @@ export default React.createContext({
   // State values
   dropdownOpen: false,
   calendarOpen: false,
+  closeDropown: false,
   numCalendars: 2,
   focusedInput: 'startDate',
   currentValue: null,
@@ -11,7 +12,5 @@ export default React.createContext({
   endDate: null,
 
   // Util functions
-  closeDropdownOnTimeout: () => {},
-  closeDropdown: () => {},
   isCalendarOpen: () => {},
 });

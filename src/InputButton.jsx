@@ -36,6 +36,12 @@ const InputButton = props => {
       name: 'focusedInput',
       value: START_DATE,
     });
+
+    dispatch({
+      type: UPDATE_STATE_VALUE,
+      name: 'closeDropdown',
+      value: false,
+    });
   };
 
   /* eslint-disable max-len */
