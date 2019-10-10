@@ -17,7 +17,7 @@ $weekdayHeadingText: $grey !default;
 $dateText: $light-grey !default;
 $dateTextHighlighted: $grey !default;
 
-$image-path: "/images" !default;
+$image-path: '/images' !default;
 
 $break-small: 660px !default;
 $break-medium: 980px !default;
@@ -25,22 +25,29 @@ $break-large: 1300px !default;
 $break-extra-large: 1920px !default;
 
 @mixin respond-to($media) {
-    @if $media == handhelds {
-        @media only screen and (max-width: $break-small) { @content; }
+  @if $media == handhelds {
+    @media only screen and (max-width: $break-small) {
+      @content;
     }
-    @else if $media == medium-screens {
-        @media only screen and (min-width: $break-small + 1) and (max-width: $break-medium - 1) { @content; }
+  } @else if $media == medium-screens {
+    @media only screen and (min-width: $break-small + 1) and (max-width: $break-medium - 1) {
+      @content;
     }
-    @else if $media == medium-screens-up {
-        @media only screen and (min-width: $break-small + 1) { @content; }
+  } @else if $media == medium-screens-up {
+    @media only screen and (min-width: $break-small + 1) {
+      @content;
     }
-    @else if $media == medium-wide-screens {
-        @media only screen and (min-width: $break-small) { @content; }
+  } @else if $media == medium-wide-screens {
+    @media only screen and (min-width: $break-small) {
+      @content;
     }
-    @else if $media == wide-screens {
-        @media only screen and (min-width: $break-medium) { @content; }
+  } @else if $media == wide-screens {
+    @media only screen and (min-width: $break-medium) {
+      @content;
     }
-    @else if $media == extra-wide-screens {
-        @media only screen and (min-width: $break-large) { @content; }
+  } @else if $media == extra-wide-screens {
+    @media only screen and (min-width: $break-large) {
+      @content;
     }
+  }
 }

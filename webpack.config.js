@@ -1,44 +1,37 @@
 /* eslint-env node */
-
-var path = require('path');
+const path = require('path');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
   mode: 'development',
-  entry: path.resolve(
-    __dirname,
-    'example/example.jsx'
-  ),
+  devtool: 'source-map',
+  entry: [path.resolve(__dirname, 'example/example.jsx')],
   output: {
-    path: path.resolve(__dirname, 'example'),
-    filename: 'example.js'
+    path: path.resolve(__dirname, 'example/build'),
+    filename: 'example.js',
   },
   module: {
     rules: [
       {
         test: /\.jsx$/,
-        loader: 'babel-loader',
-        options: {
-          presets: ['react', 'es2015']
-        }
+        use: {
+          loader: 'babel-loader',
+        },
       },
       {
-        test: /\.scss$/,
-        use: [
-          'style-loader',
-          'css-loader',
-          'sass-loader'
-        ]
+        test: /\.(s?)css$/,
+        use: ['style-loader', 'css-loader', 'sass-loader'],
       },
-      {
-        test: /\.png$/,
-        loader: 'url-loader'
-      }
-    ]
+    ],
   },
   resolve: {
     extensions: ['.js', '.jsx'],
-    modules: [
-      'node_modules'
-    ]
-  }
+    modules: ['node_modules'],
+  },
+  plugins: [
+    new HtmlWebpackPlugin({
+      title: 'Date Range Input Example',
+      template: './example/index.template.html',
+    }),
+  ],
 };

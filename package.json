@@ -1,6 +1,6 @@
 {
   "name": "ddm-date-range-input",
-  "version": "3.0.5",
+  "version": "4.0.0",
   "description": "React Date Range Input and Picker",
   "repository": {
     "type": "git",
@@ -14,50 +14,53 @@
   ],
   "author": "Russell Ahlstrom <russell.ahlstrom@gmail.com>",
   "license": "MIT",
-  "main": "lib/index.js",
+  "main": "dist/index.js",
   "directories": {
     "lib": "dist",
     "example": "example"
   },
   "scripts": {
-    "build": "yarn run build-js; yarn run build-css; yarn run build-example",
-    "build-js": "babel ./modules -d lib",
-    "build-css": "node-sass --output-style compressed --include-path scss scss/index.scss lib/styles.css",
-    "build-example": "webpack",
-    "watch-example": "webpack --watch",
-    "lint": "eslint modules/*",
-    "init": "yarn install --ignore-engines --pure-lockfile"
+    "build": "yarn run build-js; yarn run build-css",
+    "build-js": "babel ./src -d dist",
+    "build-css": "node-sass --output-style compressed --include-path scss scss/index.scss dist/styles.css",
+    "lint": "eslint src/*",
+    "start": "webpack-dev-server --hot"
   },
   "dependencies": {
-    "airbnb-browser-shims": "^2.1.0",
-    "classnames": "^2.2.5",
-    "moment": "^2.22.1",
-    "moment-range": "^4.0.0",
-    "react-dates": "^12.7.0"
+    "@babel/runtime": "^7.6.2",
+    "airbnb-browser-shims": "^3.2.1",
+    "classnames": "^2.2.6",
+    "moment": "^2.18.1",
+    "moment-range": "^4.0.2",
+    "react-dates": "^21.0.1",
+    "react-with-direction": "^1.3.0"
   },
   "devDependencies": {
-    "babel-cli": "^6.26.0",
-    "babel-core": "^6.26.0",
-    "babel-eslint": "^8.2.3",
-    "babel-loader": "^7.1.4",
-    "babel-preset-es2015": "^6.24.1",
-    "babel-preset-react": "^6.24.1",
-    "babel-preset-stage-2": "^6.24.1",
-    "css-loader": "^0.28.11",
-    "eslint": "^4.19.1",
-    "eslint-plugin-react": "^7.7.0",
-    "file-loader": "^1.1.11",
-    "node-sass": "^4.8.3",
-    "react": "^16.3.2",
-    "react-addons-shallow-compare": "^15.6.2",
-    "react-dom": "^16.3.2",
-    "sass-loader": "^7.0.1",
-    "style-loader": "^0.21.0",
-    "url-loader": "^1.0.1",
-    "webpack": "^4.8.3",
-    "webpack-cli": "^2.1.3"
+    "@babel/cli": "^7.5.5",
+    "@babel/core": "^7.5.5",
+    "@babel/plugin-proposal-class-properties": "^7.5.5",
+    "@babel/preset-env": "^7.6.0",
+    "@babel/preset-react": "^7.0.0",
+    "babel-eslint": "^10.0.2",
+    "babel-loader": "^8.0.6",
+    "css-loader": "^3.1.0",
+    "eslint": "^6.1.0",
+    "eslint-plugin-react": "^7.14.3",
+    "eslint-plugin-react-hooks": "^2.0.1",
+    "file-loader": "^4.1.0",
+    "html-webpack-plugin": "^3.2.0",
+    "node-sass": "^4.12.0",
+    "prettier": "^1.18.2",
+    "react": "^16.8.6",
+    "react-dom": "npm:@hot-loader/react-dom",
+    "react-hot-loader": "^4.12.10",
+    "sass-loader": "^8.0.0",
+    "style-loader": "^1.0.0",
+    "webpack": "^4.37.0",
+    "webpack-cli": "^3.3.6",
+    "webpack-dev-server": "^3.7.2"
   },
   "peerDependencies": {
-    "react": ">=16.3.x"
+    "react": ">=16.8.x"
   }
 }
